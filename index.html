@@ -592,16 +592,18 @@
         ],
         [
           'The dots leave the map and settle into three story emphases: tradition, nature, and community.',
-          'First read the whole thematic landscape: every story stays visible before any emphasis is singled out.',
+          'This scene groups the stories by what they emphasize most: inherited tradition, the natural world, or community life.',
           'Tradition means heritage, ritual, ancestors, continuity, customs, and preserving what is inherited.',
           'Nature means the environment is central to setting, conflict, or resolution: forests, seasons, rainforests, and ecological threats.',
           'Community means collective wellbeing, cooperation, villages, families, and solving problems together.',
-          'Japan leans toward tradition; Norway leans toward nature; Brazil sits between nature and community.',
-          'Indonesia leans toward community, while the United States leans toward community and tradition more than nature.'
+          'Japan is the clearest tradition-leaning group in this sample, with heritage and inherited forms recurring across several stories.',
+          'Norway gathers near nature, where forests, winter, guardians, and ecological balance often drive the conflict.',
+          'Brazil sits strongly between nature and community, with Amazon settings and collective action carrying many plots.',
+          'Indonesia and the United States sit closer to community, though the United States also carries a visible tradition thread.'
         ],
         [
           'We classify each story ending into one of four broad resolution types: reconciliation, restoration, transformation, or victory.',
-          'First see all four ending types together. Then each category is highlighted in turn.',
+          'This scene groups the endings by what they resolve: relationships, balance, personal change, or an external threat.',
           'Reconciliation repairs a relationship, social tension, or separation. The central outcome is coming together.',
           'Restoration brings something damaged, threatened, or lost back into balance.',
           'Transformation changes the protagonist, future, or way of life into something fundamentally new.',
@@ -708,8 +710,10 @@
           if (beat === 2) return { type: 'score', key: 'traditionFocus', min: 0.7 };
           if (beat === 3) return { type: 'score', key: 'natureFocus', min: 0.7 };
           if (beat === 4) return { type: 'score', key: 'communityFocus', min: 0.75 };
-          if (beat === 5) return { type: 'country', values: ['JP', 'NO', 'BR'] };
-          if (beat === 6) return { type: 'country', values: ['ID', 'US'] };
+          if (beat === 5) return { type: 'country', values: ['JP'] };
+          if (beat === 6) return { type: 'country', values: ['NO'] };
+          if (beat === 7) return { type: 'country', values: ['BR'] };
+          if (beat === 8) return { type: 'country', values: ['ID', 'US'] };
         }
         if (scene === 3) {
           const resolutions = { 2: ['reconciliation'], 3: ['restoration'], 4: ['transformation'], 5: ['victory'] }[beat];

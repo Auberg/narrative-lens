@@ -1,6 +1,6 @@
 # Package validation
 
-Validated on 2026-08-25 before packaging.
+Validated on 2026-08-26 after the project was consolidated to `index.html`.
 
 - Inline JavaScript parses successfully.
 - Seven narrative scenes are present.

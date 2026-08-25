@@ -5,7 +5,6 @@ Single-page editorial data story prototype for the `narrative-lens` repository.
 ## Project files
 
 - `index.html` — GitHub Pages entry artifact.
-- `narrative-lens.html` — OpenDesign active artifact kept in sync with `index.html`.
 - `data/narrative_lens_34.json` — authoritative 34-story dataset.
 - `references/product-brief.md` — authoritative product and design reference.
 - `OPEN_DESIGN_HANDOFF.md` — confirmed brief and a ready-to-paste continuation prompt.
@@ -13,8 +12,8 @@ Single-page editorial data story prototype for the `narrative-lens` repository.
 ## Open in OpenDesign
 
 1. Open the existing **Narrative Lens — Polished Web Concept** project, or import this extracted folder as a project.
-2. Keep the directory structure intact so `index.html` and `narrative-lens.html` can load `data/narrative_lens_34.json` by its relative path.
-3. Open `narrative-lens.html` as the project entry artifact and use the OpenDesign preview rather than opening the HTML directly from the filesystem.
+2. Keep the directory structure intact so `index.html` can load `data/narrative_lens_34.json` by its relative path.
+3. Open `index.html` as the project entry artifact and use the OpenDesign preview rather than opening the HTML directly from the filesystem.
 4. If you want OpenDesign to continue refining the prototype, paste the prompt in `OPEN_DESIGN_HANDOFF.md` into the project conversation.
 
 The prototype is self-contained and has no external runtime dependencies. It is designed to be served by the OpenDesign project preview so the relative JSON request works correctly.
