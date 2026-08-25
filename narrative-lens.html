@@ -646,7 +646,8 @@
         US_4: 'Restoration: a declining town is revived through memory and festival.'
       };
       const highlightOpacity = 0.17;
-      const state = { stories: [], stats: null, scene: 0, local: 0, sceneStep: 0, flowTop: 0, raf: 0, firstRender: false };
+      const sceneEls = Array.from(flow.querySelectorAll('.story-scene'));
+      const state = { stories: [], stats: null, scene: 0, local: 0, sceneMetrics: [], flowTop: 0, raf: 0, firstRender: false };
 
       const landPaths = [
         'M8 29 C11 23 18 20 24 20 C28 18 34 20 36 24 C33 27 29 27 29 31 C33 32 36 35 36 39 C32 41 29 40 27 43 C24 46 22 50 18 49 C16 46 15 42 12 40 C10 37 10 34 7 33 Z',
@@ -958,18 +959,33 @@
       }
 
       function updateMetrics() {
-        const firstScene = flow.querySelector('.story-scene');
-        state.sceneStep = firstScene ? firstScene.getBoundingClientRect().height : window.innerHeight;
+        const fallbackHeight = Math.max(1, window.innerHeight);
+        const stickyTop = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) + 34;
         state.flowTop = flow.getBoundingClientRect().top + window.scrollY;
+        state.sceneMetrics = sceneEls.map((sceneEl, index) => {
+          const rect = sceneEl.getBoundingClientRect();
+          const styles = getComputedStyle(sceneEl);
+          const paddingTop = parseFloat(styles.paddingTop) || 0;
+          const top = rect.top + window.scrollY + paddingTop - stickyTop;
+          const height = rect.height || fallbackHeight;
+          return { index, top, height };
+        });
       }
 
       function updateFromScroll() {
         if (!state.stories.length) return;
         updateMetrics();
-        const maxRaw = sceneNames.length - 1 + 0.999;
-        const raw = clamp((window.scrollY - state.flowTop + 2) / Math.max(1, state.sceneStep), 0, maxRaw);
-        const scene = Math.min(sceneNames.length - 1, Math.floor(raw));
-        const local = scene === sceneNames.length - 1 ? clamp(raw - (sceneNames.length - 1), 0, 1) : raw - scene;
+        const metrics = state.sceneMetrics.length ? state.sceneMetrics : sceneNames.map((_, index) => ({ index, top: state.flowTop + index * window.innerHeight, height: window.innerHeight }));
+        const y = window.scrollY;
+        let activeIndex = 0;
+        for (let index = 0; index < metrics.length; index += 1) {
+          if (y >= metrics[index].top) activeIndex = index;
+        }
+        const current = metrics[activeIndex];
+        const next = metrics[Math.min(activeIndex + 1, metrics.length - 1)];
+        const end = activeIndex === metrics.length - 1 ? current.top + current.height : next.top;
+        const scene = Math.min(sceneNames.length - 1, current.index);
+        const local = clamp((y - current.top) / Math.max(1, end - current.top), 0, 1);
         state.scene = scene;
         state.local = local;
         if (!state.raf) state.raf = requestAnimationFrame(() => { state.raf = 0; render(state.scene, state.local); });
