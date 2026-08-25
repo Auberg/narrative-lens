@@ -1,0 +1,1099 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Narrative Lens — a scroll-driven visualization of 34 AI-generated stories across five national contexts.">
+  <title>Narrative Lens — 34 stories, seven lenses</title>
+  <style>
+    :root {
+      --bg: oklch(0.165 0.015 82);
+      --surface: oklch(0.205 0.017 82);
+      --surface-strong: oklch(0.255 0.02 82);
+      --fg: oklch(0.94 0.024 84);
+      --muted: oklch(0.69 0.024 82);
+      --quiet: oklch(0.52 0.021 82);
+      --border: oklch(0.34 0.021 82);
+      --accent: oklch(0.77 0.14 62);
+      --accent-soft: oklch(0.77 0.14 62 / 0.2);
+      --green: oklch(0.74 0.105 150);
+      --blue: oklch(0.72 0.09 220);
+      --coral: oklch(0.71 0.12 30);
+      --violet: oklch(0.7 0.07 300);
+      --map-land: oklch(0.32 0.017 82 / 0.56);
+      --map-line: oklch(0.68 0.018 82 / 0.42);
+      --display: "Iowan Old Style", "Palatino Linotype", Palatino, Baskerville, Georgia, serif;
+      --body: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --header-height: 68px;
+    }
+
+    * { box-sizing: border-box; }
+    html { background: var(--bg); color: var(--fg); scroll-behavior: auto; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--body);
+      font-size: 15px;
+      line-height: 1.5;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: var(--accent); color: var(--bg); }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+    .site-header {
+      position: fixed;
+      z-index: 20;
+      inset: 0 0 auto;
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 4vw, 64px);
+      border-bottom: 1px solid oklch(1 0 0 / 0.1);
+      background: oklch(0.17 0.016 78 / 0.9);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-lockup {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+    .brand-lockup strong { color: var(--fg); font-weight: 700; }
+    .brand-lockup span { color: var(--quiet); }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .header-status .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .experience {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.78fr);
+      gap: clamp(28px, 5vw, 88px);
+      max-width: 1600px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: calc(var(--header-height) + 30px) clamp(20px, 4vw, 64px) 90px;
+    }
+
+    .visual-column { min-width: 0; }
+    .visual-sticky {
+      position: sticky;
+      top: calc(var(--header-height) + 26px);
+      height: calc(100vh - var(--header-height) - 52px);
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .visual-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .visual-heading strong { color: var(--fg); font-weight: 500; }
+
+    .visual-instruction {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 0.48fr);
+      align-items: end;
+      gap: 18px;
+      margin: 0 0 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid oklch(1 0 0 / 0.08);
+    }
+    .visual-instruction strong {
+      color: var(--fg);
+      font-family: var(--display);
+      font-size: clamp(24px, 2.3vw, 34px);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-wrap: balance;
+    }
+    .visual-instruction span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .visual-frame {
+      position: relative;
+      min-height: 430px;
+      height: min(67vh, 700px);
+      overflow: hidden;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, oklch(0.19 0.018 82), oklch(0.175 0.016 82));
+    }
+    .visual-frame::before,
+    .visual-frame::after {
+      position: absolute;
+      z-index: 1;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+    .visual-frame::before { content: "NARRATIVE FIELD / LIVE POSITION"; top: 14px; left: 16px; }
+    .visual-frame::after { content: "34 OBJECTS"; right: 16px; bottom: 14px; }
+    #viz { display: block; width: 100%; height: 100%; }
+    #viz text { font-family: var(--mono); }
+
+    .map-land {
+      fill: var(--map-land);
+      stroke: var(--map-line);
+      stroke-width: 0.25;
+      vector-effect: non-scaling-stroke;
+    }
+    .map-grid { stroke: oklch(0.7 0.02 82 / 0.14); stroke-width: 0.22; vector-effect: non-scaling-stroke; }
+    .map-equator { stroke: oklch(0.82 0.02 82 / 0.22); stroke-width: 0.28; vector-effect: non-scaling-stroke; }
+    .map-label { fill: var(--quiet); font-size: 2.2px; letter-spacing: 0; text-transform: uppercase; }
+    .axis-label { fill: oklch(0.7 0.02 82 / 0.42); font-size: 2px; letter-spacing: 0; }
+    .theme-anchor { fill: var(--fg); font-size: 2.35px; letter-spacing: 0; }
+    .theme-line { stroke: oklch(0.82 0.02 78 / 0.36); stroke-width: 0.25; stroke-dasharray: 1.1 1.1; vector-effect: non-scaling-stroke; }
+    .point { stroke: var(--bg); stroke-width: 0.55; vector-effect: non-scaling-stroke; cursor: crosshair; }
+    .point:focus,
+    .point:focus-visible { outline: none; stroke: var(--fg); stroke-width: 1.2; }
+    .point-halo { fill: none; stroke: var(--accent); stroke-width: 0.45; vector-effect: non-scaling-stroke; }
+    .country-label { fill: var(--fg); font-size: 2.6px; letter-spacing: 0; }
+    .resolution-label,
+    .resolution-cluster-label,
+    .resolution-cluster-detail,
+    .comparison-label,
+    .map-stat { font-family: var(--mono); letter-spacing: 0; }
+    .resolution-label { font-size: 2.1px; }
+    .resolution-cluster-label { fill: var(--fg); font-size: 2.25px; text-transform: uppercase; }
+    .resolution-cluster-detail { fill: var(--muted); font-size: 1.85px; }
+    .comparison-panel {
+      fill: oklch(0.205 0.017 82 / 0.82);
+      stroke: oklch(0.34 0.021 82 / 0.72);
+      stroke-width: 0.28;
+      vector-effect: non-scaling-stroke;
+    }
+    .comparison-label { font-size: 2.2px; }
+    .comparison-summary { fill: var(--muted); font-family: var(--body); font-size: 2.45px; line-height: 1.3; }
+    .comparison-reason { fill: var(--fg); font-family: var(--body); font-size: 2.25px; line-height: 1.28; }
+    .map-stat { fill: var(--fg); font-size: 2.35px; }
+    .map-stat-detail { fill: var(--muted); font-size: 1.95px; }
+
+    .legend-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      min-height: 28px;
+      padding-top: 14px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .legend-note {
+      flex-basis: 100%;
+      color: var(--fg);
+      font-family: var(--body);
+      font-size: 12px;
+      line-height: 1.45;
+      text-transform: none;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+    .legend-swatch { width: 18px; height: 2px; background: var(--quiet); }
+    .legend-swatch.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+    .legend-swatch.no { background: var(--blue); }
+    .legend-swatch.us { background: var(--coral); }
+
+    .narrative-flow {
+      min-width: 0;
+      padding-bottom: calc(140vh - var(--header-height));
+    }
+    .story-scene {
+      min-height: calc(340vh - var(--header-height) - var(--header-height));
+      display: flex;
+      align-items: flex-start;
+      padding: 24vh 0 56px;
+      border-bottom: 1px solid oklch(1 0 0 / 0.11);
+    }
+    .story-scene[data-scene="1"],
+    .story-scene[data-scene="2"],
+    .story-scene[data-scene="3"],
+    .story-scene[data-scene="4"] {
+      min-height: calc(430vh - var(--header-height) - var(--header-height));
+    }
+    .story-scene:first-child { padding-top: 24vh; }
+    .story-scene[data-scene="6"] {
+      min-height: calc(340vh - var(--header-height) - var(--header-height));
+      align-items: flex-start;
+      padding-top: 24vh;
+    }
+    .story-copy {
+      position: sticky;
+      top: calc(var(--header-height) + 34px);
+      align-self: flex-start;
+      z-index: 2;
+      max-width: 430px;
+    }
+    .scene-kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .scene-kicker::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .story-scene h1,
+    .story-scene h2 {
+      margin: 0;
+      color: var(--fg);
+      font-family: var(--display);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 0.98;
+      overflow-wrap: normal;
+      text-wrap: balance;
+    }
+    .story-scene h1 { max-width: 590px; font-size: 58px; }
+    .story-scene h2 { max-width: 420px; font-size: 45px; }
+    .story-scene p {
+      max-width: 390px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+    .scene-body {
+      min-height: 9.7em;
+      text-wrap: pretty;
+    }
+    .scene-note {
+      display: flex;
+      gap: 11px;
+      max-width: 410px;
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+    .scene-note strong { color: var(--fg); font-weight: 500; }
+    .scene-note .note-mark { flex: 0 0 auto; color: var(--accent); }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 34px;
+    }
+    .comparison-card {
+      min-width: 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .comparison-card h3 {
+      margin: 0;
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .comparison-card .country { margin-left: 7px; color: var(--muted); font-weight: 400; }
+    .comparison-card p { margin-top: 12px; font-size: 13px; line-height: 1.55; }
+    .marker-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 15px; }
+    .marker {
+      padding: 4px 7px;
+      border: 1px solid var(--border);
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0;
+    }
+    .resolution-line { margin-top: 15px; color: var(--accent); font-family: var(--mono); font-size: 10px; letter-spacing: 0; text-transform: uppercase; }
+
+    .about-data {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 0 clamp(20px, 4vw, 64px) 70px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+    .about-data strong { color: var(--muted); font-weight: 500; }
+
+    .tooltip {
+      position: fixed;
+      z-index: 30;
+      width: min(270px, calc(100vw - 32px));
+      padding: 12px 14px;
+      pointer-events: none;
+      border: 1px solid var(--border);
+      background: oklch(0.22 0.018 78 / 0.97);
+      box-shadow: 0 18px 42px oklch(0 0 0 / 0.24);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+    .tooltip.is-visible { opacity: 1; transform: translateY(0); }
+    .tooltip .tip-id { color: var(--accent); font-family: var(--mono); font-size: 10px; letter-spacing: 0; text-transform: uppercase; }
+    .tooltip p { margin: 7px 0 9px; color: var(--fg); font-size: 12px; line-height: 1.45; }
+    .tooltip .tip-meta { color: var(--muted); font-family: var(--mono); font-size: 9px; line-height: 1.5; }
+
+    .loading,
+    .load-error {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-align: center;
+      letter-spacing: 0;
+    }
+    .load-error { color: var(--coral); }
+
+    @media (max-width: 1080px) {
+      .experience { display: block; padding-top: calc(var(--header-height) + 12px); }
+      .visual-column {
+        position: sticky;
+        z-index: 12;
+        top: var(--header-height);
+        padding: 18px 0 24px;
+        background: var(--bg);
+      }
+      .visual-sticky { position: static; height: auto; min-height: 0; padding: 0; }
+      .visual-frame { height: clamp(300px, 42vh, 420px); min-height: 300px; }
+      .narrative-flow { padding-bottom: 130vh; }
+      .story-scene {
+        min-height: 320vh;
+        align-items: start;
+        padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 86px;
+      }
+      .story-scene[data-scene="6"] {
+        min-height: 320vh;
+        padding-top: calc(clamp(300px, 42vh, 420px) + 112px);
+      }
+      .story-scene:first-child { padding-top: calc(clamp(300px, 42vh, 420px) + 112px); }
+      .story-copy {
+        max-width: 620px;
+        top: calc(var(--header-height) + clamp(300px, 42vh, 420px) + 44px);
+      }
+      .story-scene h1 { font-size: 46px; }
+      .story-scene h2 { font-size: 38px; }
+    }
+    @media (max-width: 560px) {
+      .site-header { padding: 0 18px; }
+      .brand-lockup span { display: none; }
+      .header-status span:not(.status-dot) { display: none; }
+      .experience { padding-right: 18px; padding-left: 18px; }
+      .visual-heading { font-size: 9px; }
+      .visual-instruction { grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; padding-bottom: 12px; }
+      .visual-instruction strong { font-size: 25px; }
+      .visual-instruction span { font-size: 12px; }
+      .visual-frame { height: clamp(260px, 38vh, 310px); min-height: 260px; }
+      .legend-line { gap: 8px 14px; }
+      .story-scene {
+        min-height: 320vh;
+        padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
+        padding-bottom: 74px;
+      }
+      .story-scene[data-scene="6"] {
+        min-height: 320vh;
+        padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
+      }
+      .story-scene:first-child { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
+      .story-scene h1 { font-size: 35px; }
+      .story-scene h2 { font-size: 32px; }
+      .story-scene p { font-size: 17px; }
+      .story-copy { top: calc(var(--header-height) + clamp(260px, 38vh, 310px) + 44px); }
+      .scene-body { min-height: 11em; }
+      .comparison-grid { grid-template-columns: 1fr; gap: 32px; }
+      .about-data { padding-right: 18px; padding-left: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" data-od-id="site-header">
+    <div class="brand-lockup" data-od-id="brand-lockup"><strong>Narrative Lens</strong><span>/ research prototype</span></div>
+    <div class="header-status" data-od-id="scene-status"><i class="status-dot" aria-hidden="true"></i><span id="scene-status-text">Scene 01 — scattered</span></div>
+  </header>
+
+  <main class="experience" data-od-id="narrative-experience">
+    <section class="visual-column" aria-label="Narrative visualization" data-od-id="visual-column">
+      <div class="visual-sticky" data-od-id="visual-sticky">
+        <div class="visual-heading"><strong id="visual-title">Now showing: What one dot means</strong><span id="visual-progress">01 / 07</span></div>
+        <div class="visual-instruction" data-od-id="visual-scroll-instruction">
+          <strong>Each Scene told a story, Scroll to learn more</strong>
+          <span>34 stories. 5 national contexts. Hover or tab to a dot for story details.</span>
+        </div>
+        <div class="visual-frame" data-od-id="visual-frame">
+          <div class="loading" id="loading">Loading the 34 story objects…</div>
+          <svg id="viz" viewBox="0 0 100 100" role="img" aria-label="A visualization of 34 stories in transition between narrative scenes" hidden></svg>
+        </div>
+        <div class="legend-line" id="legend" data-od-id="visual-legend"></div>
+      </div>
+    </section>
+
+    <section class="narrative-flow" id="narrative-flow" data-od-id="narrative-flow" aria-label="Seven narrative scenes">
+      <article class="story-scene" data-scene="0" data-od-id="scene-intro">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 01 / 07 · data</div>
+          <h1 data-od-id="intro-heading">Before we begin:<br>what is a dot?</h1>
+          <p class="scene-body" data-scene-body="0" data-od-id="intro-copy">Each dot represents one AI-generated story. There are 34 stories in this visualization, sampled across five national contexts.</p>
+          <div class="scene-note"><span class="note-mark">01</span><span><strong>One dot is one story.</strong> Source attributes, interpretive labels, and visualization scores have different levels of certainty.</span></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="1" data-od-id="scene-origin">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 02 / 07 · origin</div>
+          <h2 data-od-id="origin-heading">First, look at where the stories come from.</h2>
+          <p class="scene-body" data-scene-body="1" data-od-id="origin-copy">The same 34 stories are now grouped by the national context used to generate them.</p>
+          <div class="scene-note"><span class="note-mark">02</span><span><strong>Country becomes identity.</strong> Position and color establish national context without changing the story objects.</span></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="2" data-od-id="scene-themes">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 03 / 07 · themes</div>
+          <h2 data-od-id="themes-heading">Now look beyond location. What does each story emphasize?</h2>
+          <p class="scene-body" data-scene-body="2" data-od-id="themes-copy">The map fades. Each point moves between tradition, nature, and community using the annotated values in the JSON.</p>
+          <div class="scene-note"><span class="note-mark">03</span><span><strong>Theme is annotation.</strong> These positions compare emphasis; they are not measurements of culture.</span></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="3" data-od-id="scene-shape">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 04 / 07 · resolution types</div>
+          <h2 data-od-id="shape-heading">Different stories can solve their problems in different ways.</h2>
+          <p class="scene-body" data-scene-body="3" data-od-id="shape-copy">We classify each story ending into one of four broad resolution types: reconciliation, restoration, transformation, or victory.</p>
+          <div class="scene-note"><span class="note-mark">04</span><span><strong>Shape now teaches ending.</strong> Position groups resolution type while color keeps national context visible.</span></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="4" data-od-id="scene-resolution">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 05 / 07 · resolution x origin</div>
+          <h2 data-od-id="resolution-heading">Now put those endings back where the stories began.</h2>
+          <p class="scene-body" data-scene-body="4" data-od-id="resolution-copy">Same 34 stories. Same country colors. Now each dot carries one new piece of information: its shape tells you how that story ends.</p>
+          <div class="scene-note"><span class="note-mark">05</span><span><strong>Map callback.</strong> Position is national context; color is national context; shape is resolution type.</span></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="5" data-od-id="scene-comparison">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 06 / 07 · close reading</div>
+          <h2 data-od-id="comparison-heading">A shared label can hide very different stories.</h2>
+          <p class="scene-body" data-scene-body="5" data-od-id="comparison-copy">NO_2 and US_4 both carry the restoration shape, but a shared category does not make their meanings identical.</p>
+          <div class="comparison-grid" data-od-id="comparison-cards"></div>
+        </div>
+      </article>
+
+      <article class="story-scene" data-scene="6" data-od-id="scene-conclusion">
+        <div class="story-copy">
+          <div class="scene-kicker">Scene 07 / 07 · interpretation</div>
+          <h2 data-od-id="conclusion-heading">Patterns are a starting point, not the answer.</h2>
+          <p class="scene-body" data-scene-body="6" data-od-id="conclusion-copy">Visualization helps us move from many stories, to visual patterns, to better questions, and then back to close reading.</p>
+          <div class="scene-note"><span class="note-mark">07</span><span><strong>Return to the story.</strong> Scroll back through the sequence to reverse every transition and revisit the reasoning.</span></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <aside class="about-data" data-od-id="about-data">
+    <strong>About the data.</strong> This portfolio sample contains 34 AI-generated stories from the public AI STORIES dataset, written with gpt-4o-mini. Source story IDs and automated emotion labels are retained; summaries, narrative classifications, and visualization dimensions are interpretive annotations created for this prototype. The sample does not represent real national storytelling traditions or cultures.
+  </aside>
+  <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+  <!-- Preview fallback generated from data/narrative_lens_34.json; keep that file authoritative. -->
+  <script type="application/json" id="story-data-fallback">
+{"metadata":{"title":"Narrative Lens — 34 Story Portfolio Sample","version":"1.0","recordCount":34,"purpose":"Interactive 3D narrative-data-visualization portfolio prototype","sourceDataset":"AI STORIES (University of Bergen), 1500-word stories generated by gpt-4o-mini for 236 nationalities","sourceModel":"gpt-4o-mini","sourceBasePrompt":"Write a 1500 word potential {demonym} story","sampleDesign":{"Indonesia":7,"Norway":7,"Japan":7,"United States":7,"Brazil":6},"sourceDerivedFields":["sourceStoryId","country","countryCode","emotion","emotionConfidence"],"portfolioDerivedFields":["summary","resolution","closure","settingType","homeReturn","communityResolution","culturalMarkers","conflictIntensity","agency","communityFocus","traditionFocus","natureFocus","romanceFocus","arc","valence"],"importantNote":"The source story IDs and automated emotion labels/confidences are taken from the public AI STORIES dataset. The short summaries are original paraphrases for this portfolio. Narrative classifications and numerical visualization dimensions are interpretive annotations created for the prototype and must not be presented as measurements published by the AI STORIES researchers.","scaleNotes":{"emotionConfidence":"0–1, source model confidence","valence":"-1 to +1 approximate display coordinate derived from emotion label and confidence","conflictIntensity":"0–1 interpretive annotation","agency":"0–1 interpretive annotation","communityFocus":"0–1 interpretive annotation","traditionFocus":"0–1 interpretive annotation","natureFocus":"0–1 interpretive annotation","romanceFocus":"0–1 interpretive annotation","arc":"[setup, conflict, escalation, resolution], 0–1 narrative tension/intensity for visualization only"}},"stories":[{"id":1,"sourceStoryId":"ID_1","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Rani pursues education after a storm and wins a scholarship that also benefits her village.","emotion":"joy","emotionConfidence":0.91,"resolution":"transformation","closure":"closed","settingType":"village","homeReturn":false,"communityResolution":true,"culturalMarkers":["village","family farm","community"],"conflictIntensity":0.68,"agency":0.9,"communityFocus":0.78,"traditionFocus":0.28,"natureFocus":0.3,"romanceFocus":0.02,"arc":[0.22,0.48,0.82,0.94],"valence":0.682},{"id":2,"sourceStoryId":"ID_2","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Aisha overcomes creative blocks, embraces her voice as a writer, and builds a lasting local legacy.","emotion":"joy","emotionConfidence":1,"resolution":"transformation","closure":"closed","settingType":"village","homeReturn":false,"communityResolution":true,"culturalMarkers":["heritage","storytelling","literary festival"],"conflictIntensity":0.38,"agency":0.82,"communityFocus":0.72,"traditionFocus":0.58,"natureFocus":0.08,"romanceFocus":0.05,"arc":[0.28,0.42,0.64,0.91],"valence":0.75},{"id":3,"sourceStoryId":"ID_3","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Arman follows a magical quest, improves his farm, and learns that success means helping others.","emotion":"joy","emotionConfidence":0.94,"resolution":"transformation","closure":"closed","settingType":"village","homeReturn":false,"communityResolution":true,"culturalMarkers":["farmer","wise elder","magical elements"],"conflictIntensity":0.58,"agency":0.84,"communityFocus":0.82,"traditionFocus":0.46,"natureFocus":0.52,"romanceFocus":0,"arc":[0.25,0.55,0.79,0.93],"valence":0.705},{"id":4,"sourceStoryId":"ID_4","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Tina receives a warning from a forest guardian and rallies her village to protect the land.","emotion":"joy","emotionConfidence":0.98,"resolution":"restoration","closure":"closed","settingType":"village_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["Sumatra","forest guardian","ceremony"],"conflictIntensity":0.75,"agency":0.88,"communityFocus":0.93,"traditionFocus":0.84,"natureFocus":0.96,"romanceFocus":0,"arc":[0.2,0.56,0.88,0.95],"valence":0.735},{"id":5,"sourceStoryId":"ID_5","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Arif travels beyond home, meets an artist, then returns to use their talents for his community.","emotion":"joy","emotionConfidence":1,"resolution":"reconciliation","closure":"closed","settingType":"village_journey","homeReturn":true,"communityResolution":true,"culturalMarkers":["village","journey","community"],"conflictIntensity":0.34,"agency":0.82,"communityFocus":0.86,"traditionFocus":0.44,"natureFocus":0.18,"romanceFocus":0.48,"arc":[0.3,0.45,0.62,0.92],"valence":0.75},{"id":6,"sourceStoryId":"ID_6","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"A painter and traveling photographer form a relationship while supporting each other's creative ambitions.","emotion":"joy","emotionConfidence":0.91,"resolution":"reconciliation","closure":"closed","settingType":"coastal_village","homeReturn":false,"communityResolution":false,"culturalMarkers":["coastal village","painting","travel"],"conflictIntensity":0.31,"agency":0.68,"communityFocus":0.38,"traditionFocus":0.18,"natureFocus":0.36,"romanceFocus":0.94,"arc":[0.34,0.46,0.58,0.88],"valence":0.682},{"id":7,"sourceStoryId":"ID_7","country":"Indonesia","countryCode":"ID","region":"Asia","summary":"Lani enters an architecture competition, earns a scholarship, and returns her success to the community.","emotion":"joy","emotionConfidence":0.98,"resolution":"transformation","closure":"closed","settingType":"city_village","homeReturn":true,"communityResolution":true,"culturalMarkers":["Jakarta","architecture","community"],"conflictIntensity":0.52,"agency":0.94,"communityFocus":0.74,"traditionFocus":0.16,"natureFocus":0.08,"romanceFocus":0,"arc":[0.24,0.51,0.8,0.96],"valence":0.735},{"id":8,"sourceStoryId":"NO_1","country":"Norway","countryCode":"NO","region":"Europe","summary":"A grieving lighthouse keeper meets a sailor and gradually reconnects with companionship and life.","emotion":"fear","emotionConfidence":0.92,"resolution":"reconciliation","closure":"closed","settingType":"coastal_village","homeReturn":false,"communityResolution":false,"culturalMarkers":["lighthouse","coastal village","sailor"],"conflictIntensity":0.5,"agency":0.58,"communityFocus":0.34,"traditionFocus":0.18,"natureFocus":0.5,"romanceFocus":0.78,"arc":[0.25,0.43,0.61,0.86],"valence":-0.598},{"id":9,"sourceStoryId":"NO_2","country":"Norway","countryCode":"NO","region":"Europe","summary":"During a drought, Freya completes a forest quest and unites her village to restore ecological balance.","emotion":"joy","emotionConfidence":0.99,"resolution":"restoration","closure":"closed","settingType":"village_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["forest","ancient well","village"],"conflictIntensity":0.72,"agency":0.91,"communityFocus":0.9,"traditionFocus":0.65,"natureFocus":0.96,"romanceFocus":0,"arc":[0.18,0.52,0.86,0.96],"valence":0.742},{"id":10,"sourceStoryId":"NO_3","country":"Norway","countryCode":"NO","region":"Europe","summary":"Erik seeks refuge in Vinterdal, confronts his past, and finds renewed purpose in love and community.","emotion":"joy","emotionConfidence":0.96,"resolution":"reconciliation","closure":"closed","settingType":"village_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["Norwegian village","whispering pines","inn"],"conflictIntensity":0.42,"agency":0.56,"communityFocus":0.66,"traditionFocus":0.44,"natureFocus":0.72,"romanceFocus":0.76,"arc":[0.3,0.47,0.6,0.89],"valence":0.72},{"id":11,"sourceStoryId":"NO_4","country":"Norway","countryCode":"NO","region":"Europe","summary":"Elin returns home and joins ancient guardians and villagers against outsiders threatening their land.","emotion":"joy","emotionConfidence":0.81,"resolution":"restoration","closure":"closed","settingType":"village_forest","homeReturn":true,"communityResolution":true,"culturalMarkers":["forest spirits","village","ancestral land"],"conflictIntensity":0.78,"agency":0.87,"communityFocus":0.94,"traditionFocus":0.82,"natureFocus":0.95,"romanceFocus":0.02,"arc":[0.2,0.55,0.89,0.94],"valence":0.608},{"id":12,"sourceStoryId":"NO_5","country":"Norway","countryCode":"NO","region":"Europe","summary":"Astrid discovers forest spirits and organizes her community against a corporation threatening the woods.","emotion":"joy","emotionConfidence":0.99,"resolution":"victory","closure":"closed","settingType":"village_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["Whispering Pines","tree spirits","protest"],"conflictIntensity":0.81,"agency":0.94,"communityFocus":0.95,"traditionFocus":0.63,"natureFocus":0.98,"romanceFocus":0,"arc":[0.19,0.58,0.91,0.97],"valence":0.742},{"id":13,"sourceStoryId":"NO_6","country":"Norway","countryCode":"NO","region":"Europe","summary":"Freya gathers sacred seasonal objects, restores winter's balance, and becomes a protector of nature.","emotion":"joy","emotionConfidence":0.85,"resolution":"restoration","closure":"closed","settingType":"snow_village_forest","homeReturn":false,"communityResolution":false,"culturalMarkers":["winter","sacred objects","forest guardian"],"conflictIntensity":0.71,"agency":0.9,"communityFocus":0.5,"traditionFocus":0.72,"natureFocus":0.99,"romanceFocus":0,"arc":[0.21,0.57,0.88,0.96],"valence":0.637},{"id":14,"sourceStoryId":"NO_7","country":"Norway","countryCode":"NO","region":"Europe","summary":"Astrid explores a mystical forest, confronts visions of her future, and chooses to inspire others.","emotion":"joy","emotionConfidence":0.97,"resolution":"transformation","closure":"closed","settingType":"village_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["early 1900s","mystical pines","forest spirit"],"conflictIntensity":0.49,"agency":0.79,"communityFocus":0.64,"traditionFocus":0.68,"natureFocus":0.78,"romanceFocus":0.02,"arc":[0.29,0.48,0.72,0.9],"valence":0.728},{"id":15,"sourceStoryId":"JP_1","country":"Japan","countryCode":"JP","region":"Asia","summary":"Aiko and Kaito revive a struggling kimono shop by combining contemporary art with tradition.","emotion":"joy","emotionConfidence":0.6,"resolution":"reconciliation","closure":"closed","settingType":"small_town","homeReturn":true,"communityResolution":true,"culturalMarkers":["kimono","cherry blossoms","family shop"],"conflictIntensity":0.4,"agency":0.77,"communityFocus":0.68,"traditionFocus":0.92,"natureFocus":0.22,"romanceFocus":0.7,"arc":[0.31,0.44,0.66,0.88],"valence":0.45},{"id":16,"sourceStoryId":"JP_2","country":"Japan","countryCode":"JP","region":"Asia","summary":"Aiko enters an enchanted bamboo grove, completes three trials, and brings her missing father home.","emotion":"fear","emotionConfidence":0.72,"resolution":"restoration","closure":"closed","settingType":"village_bamboo_forest","homeReturn":true,"communityResolution":false,"culturalMarkers":["bamboo grove","guardian spirit","three trials"],"conflictIntensity":0.82,"agency":0.92,"communityFocus":0.42,"traditionFocus":0.77,"natureFocus":0.89,"romanceFocus":0,"arc":[0.17,0.59,0.92,0.95],"valence":-0.468},{"id":17,"sourceStoryId":"JP_3","country":"Japan","countryCode":"JP","region":"Asia","summary":"Aiko retrieves a celestial stone, defeats a dark force, and restores protection around her village.","emotion":"joy","emotionConfidence":0.99,"resolution":"restoration","closure":"closed","settingType":"village_bamboo_forest","homeReturn":false,"communityResolution":true,"culturalMarkers":["bamboo grove","ancient spirits","celestial stone"],"conflictIntensity":0.84,"agency":0.95,"communityFocus":0.83,"traditionFocus":0.84,"natureFocus":0.87,"romanceFocus":0,"arc":[0.18,0.61,0.94,0.98],"valence":0.742},{"id":18,"sourceStoryId":"JP_4","country":"Japan","countryCode":"JP","region":"Asia","summary":"Aiko retells an old human-spirit romance through festival dance and begins a new connection herself.","emotion":"joy","emotionConfidence":0.92,"resolution":"reconciliation","closure":"closed","settingType":"village_festival","homeReturn":false,"communityResolution":true,"culturalMarkers":["scroll","cherry blossom festival","dance"],"conflictIntensity":0.3,"agency":0.67,"communityFocus":0.6,"traditionFocus":0.91,"natureFocus":0.32,"romanceFocus":0.9,"arc":[0.35,0.43,0.58,0.86],"valence":0.69},{"id":19,"sourceStoryId":"JP_5","country":"Japan","countryCode":"JP","region":"Asia","summary":"Aiko leaves home for adventure, explores the world, then returns with stronger attachment to her heritage.","emotion":"fear","emotionConfidence":0.98,"resolution":"reconciliation","closure":"closed","settingType":"village_journey","homeReturn":true,"communityResolution":true,"culturalMarkers":["ancient willow","village","heritage"],"conflictIntensity":0.47,"agency":0.86,"communityFocus":0.67,"traditionFocus":0.88,"natureFocus":0.55,"romanceFocus":0.12,"arc":[0.28,0.51,0.73,0.91],"valence":-0.637},{"id":20,"sourceStoryId":"JP_6","country":"Japan","countryCode":"JP","region":"Asia","summary":"Akira returns home and helps friends rally a struggling village around creativity and shared hope.","emotion":"joy","emotionConfidence":0.96,"resolution":"restoration","closure":"closed","settingType":"village","homeReturn":true,"communityResolution":true,"culturalMarkers":["bamboo grove","grandmother","village"],"conflictIntensity":0.48,"agency":0.78,"communityFocus":0.95,"traditionFocus":0.72,"natureFocus":0.52,"romanceFocus":0.12,"arc":[0.25,0.49,0.68,0.93],"valence":0.72},{"id":21,"sourceStoryId":"JP_7","country":"Japan","countryCode":"JP","region":"Asia","summary":"After heartbreak, Kaito finds healing in a mystical grove and a new relationship with Aiko.","emotion":"joy","emotionConfidence":0.93,"resolution":"reconciliation","closure":"closed","settingType":"village_bamboo_forest","homeReturn":false,"communityResolution":false,"culturalMarkers":["bamboo grove","ancestors","starry sky"],"conflictIntensity":0.39,"agency":0.54,"communityFocus":0.32,"traditionFocus":0.62,"natureFocus":0.7,"romanceFocus":0.86,"arc":[0.26,0.45,0.59,0.87],"valence":0.698},{"id":22,"sourceStoryId":"US_1","country":"United States","countryCode":"US","region":"Americas","summary":"Benny confronts family expectations and ultimately finds his voice by organizing a storytelling event.","emotion":"joy","emotionConfidence":0.48,"resolution":"transformation","closure":"closed","settingType":"small_town","homeReturn":false,"communityResolution":true,"culturalMarkers":["Maplewood","ancient well","storytelling event"],"conflictIntensity":0.43,"agency":0.8,"communityFocus":0.82,"traditionFocus":0.6,"natureFocus":0.1,"romanceFocus":0.03,"arc":[0.29,0.47,0.7,0.91],"valence":0.36},{"id":23,"sourceStoryId":"US_2","country":"United States","countryCode":"US","region":"Americas","summary":"Molly discovers wartime family letters and turns the inherited love story into a book.","emotion":"joy","emotionConfidence":0.99,"resolution":"reconciliation","closure":"closed","settingType":"small_town","homeReturn":false,"communityResolution":false,"culturalMarkers":["World War II letters","family history","book"],"conflictIntensity":0.3,"agency":0.72,"communityFocus":0.48,"traditionFocus":0.78,"natureFocus":0.05,"romanceFocus":0.76,"arc":[0.33,0.4,0.55,0.86],"valence":0.742},{"id":24,"sourceStoryId":"US_3","country":"United States","countryCode":"US","region":"Americas","summary":"Ella leaves her small town for Chicago, succeeds in art, then returns changed but still rooted.","emotion":"joy","emotionConfidence":0.99,"resolution":"transformation","closure":"closed","settingType":"small_town_city","homeReturn":true,"communityResolution":false,"culturalMarkers":["small town","Chicago","train"],"conflictIntensity":0.44,"agency":0.91,"communityFocus":0.36,"traditionFocus":0.39,"natureFocus":0.05,"romanceFocus":0.04,"arc":[0.3,0.5,0.74,0.93],"valence":0.742},{"id":25,"sourceStoryId":"US_4","country":"United States","countryCode":"US","region":"Americas","summary":"A journalist helps revive a Kansas ghost town by turning local history into a community festival.","emotion":"joy","emotionConfidence":0.99,"resolution":"restoration","closure":"closed","settingType":"small_town","homeReturn":false,"communityResolution":true,"culturalMarkers":["Kansas","ghost town","festival"],"conflictIntensity":0.42,"agency":0.83,"communityFocus":0.97,"traditionFocus":0.78,"natureFocus":0.04,"romanceFocus":0.04,"arc":[0.24,0.45,0.68,0.96],"valence":0.742},{"id":26,"sourceStoryId":"US_5","country":"United States","countryCode":"US","region":"Americas","summary":"Amelia leaves Appalachia for art school but returns during a family crisis and reconciles both worlds.","emotion":"joy","emotionConfidence":0.6,"resolution":"reconciliation","closure":"closed","settingType":"small_town_city","homeReturn":true,"communityResolution":true,"culturalMarkers":["Appalachia","art school","hometown"],"conflictIntensity":0.55,"agency":0.78,"communityFocus":0.67,"traditionFocus":0.52,"natureFocus":0.16,"romanceFocus":0.08,"arc":[0.29,0.55,0.67,0.91],"valence":0.45},{"id":27,"sourceStoryId":"US_6","country":"United States","countryCode":"US","region":"Americas","summary":"After her father's death, Lila returns home and converts an old train station into a community hub.","emotion":"sadness","emotionConfidence":1,"resolution":"restoration","closure":"closed","settingType":"small_town","homeReturn":true,"communityResolution":true,"culturalMarkers":["train station","hometown","community hub"],"conflictIntensity":0.55,"agency":0.86,"communityFocus":0.96,"traditionFocus":0.66,"natureFocus":0.05,"romanceFocus":0.18,"arc":[0.19,0.48,0.69,0.92],"valence":-0.75},{"id":28,"sourceStoryId":"US_7","country":"United States","countryCode":"US","region":"Americas","summary":"Clara returns for a harvest festival, reconnects with old friends, and chooses her hometown over city life.","emotion":"sadness","emotionConfidence":0.69,"resolution":"reconciliation","closure":"closed","settingType":"small_town","homeReturn":true,"communityResolution":true,"culturalMarkers":["harvest festival","hometown","childhood friend"],"conflictIntensity":0.33,"agency":0.63,"communityFocus":0.8,"traditionFocus":0.82,"natureFocus":0.08,"romanceFocus":0.54,"arc":[0.25,0.4,0.56,0.85],"valence":-0.517},{"id":29,"sourceStoryId":"BR_1","country":"Brazil","countryCode":"BR","region":"Americas","summary":"Lila escapes an imposed marriage, journeys into the Amazon, and becomes a protector of rainforest knowledge.","emotion":"joy","emotionConfidence":0.59,"resolution":"transformation","closure":"closed","settingType":"rainforest_journey","homeReturn":false,"communityResolution":false,"culturalMarkers":["Amazon","rainforest","lost tribe"],"conflictIntensity":0.72,"agency":0.92,"communityFocus":0.45,"traditionFocus":0.64,"natureFocus":0.98,"romanceFocus":0.34,"arc":[0.19,0.61,0.83,0.92],"valence":0.443},{"id":30,"sourceStoryId":"BR_2","country":"Brazil","countryCode":"BR","region":"Americas","summary":"Ana learns of illegal logging from a forest spirit and organizes her community to defend the Amazon.","emotion":"joy","emotionConfidence":0.98,"resolution":"victory","closure":"closed","settingType":"rainforest_town","homeReturn":false,"communityResolution":true,"culturalMarkers":["Amazon","forest spirit","illegal logging"],"conflictIntensity":0.83,"agency":0.95,"communityFocus":0.96,"traditionFocus":0.72,"natureFocus":0.99,"romanceFocus":0,"arc":[0.2,0.6,0.93,0.97],"valence":0.735},{"id":31,"sourceStoryId":"BR_3","country":"Brazil","countryCode":"BR","region":"Americas","summary":"Clara investigates a decades-old disappearance and helps transform a town's grief into remembrance and hope.","emotion":"joy","emotionConfidence":0.99,"resolution":"reconciliation","closure":"closed","settingType":"small_town","homeReturn":false,"communityResolution":true,"culturalMarkers":["Rio São Francisco","old locket","1945 mystery"],"conflictIntensity":0.46,"agency":0.77,"communityFocus":0.79,"traditionFocus":0.66,"natureFocus":0.18,"romanceFocus":0.32,"arc":[0.25,0.5,0.66,0.91],"valence":0.742},{"id":32,"sourceStoryId":"BR_4","country":"Brazil","countryCode":"BR","region":"Americas","summary":"A São Paulo artist overcomes self-doubt with an older painter's guidance and finds her creative voice.","emotion":"joy","emotionConfidence":0.99,"resolution":"transformation","closure":"closed","settingType":"city","homeReturn":false,"communityResolution":true,"culturalMarkers":["São Paulo","painting","city stories"],"conflictIntensity":0.36,"agency":0.81,"communityFocus":0.62,"traditionFocus":0.18,"natureFocus":0.06,"romanceFocus":0.02,"arc":[0.31,0.43,0.59,0.89],"valence":0.742},{"id":33,"sourceStoryId":"BR_5","country":"Brazil","countryCode":"BR","region":"Americas","summary":"Ana learns ancient forest stories and unites her village against deforestation threatening their home.","emotion":"joy","emotionConfidence":0.42,"resolution":"restoration","closure":"closed","settingType":"rainforest_village","homeReturn":false,"communityResolution":true,"culturalMarkers":["Amazon","Tree of Echoes","deforestation"],"conflictIntensity":0.85,"agency":0.93,"communityFocus":0.97,"traditionFocus":0.82,"natureFocus":0.99,"romanceFocus":0,"arc":[0.18,0.62,0.94,0.97],"valence":0.315},{"id":34,"sourceStoryId":"BR_6","country":"Brazil","countryCode":"BR","region":"Americas","summary":"An Indigenous woman organizes villages and protests against a corporation threatening rainforest land.","emotion":"anger","emotionConfidence":0.8,"resolution":"victory","closure":"partial","settingType":"rainforest_village","homeReturn":false,"communityResolution":true,"culturalMarkers":["Amazon","Indigenous community","environmental protest"],"conflictIntensity":0.92,"agency":0.98,"communityFocus":0.99,"traditionFocus":0.82,"natureFocus":0.99,"romanceFocus":0,"arc":[0.17,0.66,0.96,0.82],"valence":-0.68}]}
+  </script>
+
+  <script>
+    (() => {
+      const DATA_URL = 'data/narrative_lens_34.json';
+      const embeddedData = document.getElementById('story-data-fallback');
+      const svg = document.getElementById('viz');
+      const loading = document.getElementById('loading');
+      const tooltip = document.getElementById('tooltip');
+      const flow = document.getElementById('narrative-flow');
+      const progressLabel = document.getElementById('visual-progress');
+      const visualTitle = document.getElementById('visual-title');
+      const sceneStatusText = document.getElementById('scene-status-text');
+      const legend = document.getElementById('legend');
+      const sceneBodyEls = Array.from(document.querySelectorAll('[data-scene-body]'));
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const sceneNames = ['data', 'origin', 'themes', 'resolution types', 'resolution x origin', 'close reading', 'interpretation'];
+      const sceneTitles = ['Now showing: What one dot means', 'Now showing: Geographic origin', 'Now showing: Thematic emphasis', 'Now showing: Resolution types', 'Now showing: Resolution x origin', 'Now showing: Same category, different meaning', 'Now showing: Back to stories'];
+      const sceneBodyBeats = [
+        [
+          'Each dot represents one AI-generated story. There are 34 stories in this visualization, sampled across five national contexts.',
+          'The source dataset provides the story identifier, national context, generated emotion label, and emotion confidence.',
+          'The resolution type, community role, home return, setting markers, and summary are interpretive labels added for this prototype.',
+          'Tradition, nature, and community scores are visualization annotations. They position stories visually; they are not objective measures of a culture.',
+          'Watch how the same 34 dots change position and appearance as we ask different questions.'
+        ],
+        [
+          'The same 34 stories are now grouped by the national context used to generate them.',
+          'First read the complete map: all five national groups stay fully visible before we isolate each one.',
+          'Indonesia often revolves around village life, aspiration, journeys, and giving something back to a community.',
+          'Japan repeatedly combines heritage and tradition with relationships, journeys, bamboo groves, spirits, and return.',
+          'Norway makes nature especially prominent: forests, winter, guardians, ecological threats, and restoring balance.',
+          'The United States often centers hometowns, family memory, local history, return, and community renewal.',
+          'Brazil shows the Amazon and environmental conflict strongly, with rainforest protection, resistance, and collective action.'
+        ],
+        [
+          'The map fades. Each point moves between tradition, nature, and community using the annotated values in the JSON.',
+          'Pause on the full thematic landscape first: every story remains visible before individual emphases are highlighted.',
+          'Tradition means heritage, ritual, ancestors, continuity, customs, and preserving what is inherited.',
+          'Nature means the environment is central to setting, conflict, or resolution: forests, seasons, rainforests, and ecological threats.',
+          'Community means collective wellbeing, cooperation, villages, families, and solving problems together.',
+          'Japan leans toward tradition; Norway leans toward nature; Brazil sits between nature and community.',
+          'Indonesia leans toward community, while the United States leans toward community and tradition more than nature.'
+        ],
+        [
+          'We classify each story ending into one of four broad resolution types: reconciliation, restoration, transformation, or victory.',
+          'Start with the complete resolution field: all four ending types stay visible before the scene isolates each category.',
+          'Reconciliation repairs a relationship, social tension, or separation. The central outcome is coming together.',
+          'Restoration brings something damaged, threatened, or lost back into balance.',
+          'Transformation changes the protagonist, future, or way of life into something fundamentally new.',
+          'Victory resolves conflict because the protagonist or community overcomes an external opponent or threat.',
+          'Look at the colors inside each cluster: stories from different national contexts can share the same kind of ending.'
+        ],
+        [
+          'Same 34 stories. Same country colors. Now each dot carries one new piece of information: its shape tells you how that story ends.',
+          'Begin with the full map callback: every story is visible, then each national context is brought forward in sequence.',
+          'Japan resolves entirely through reconciliation or restoration in this small sample: four circles and three squares.',
+          'Indonesia looks different: four of seven stories are transformation, making fundamental personal change especially visible.',
+          'Norway is more mixed. Restoration is most common, but all four resolution types appear.',
+          'The United States contains reconciliation, restoration, and transformation, but no victory endings.',
+          'Brazil has the strongest presence of victory endings in this sample, alongside transformation.',
+          'Step back from the groups: 22 of 34 stories end through reconciliation or restoration, and 33 of 34 reach a closed ending.'
+        ],
+        [
+          'NO_2 and US_4 both carry the restoration shape, but a shared category does not make their meanings identical.',
+          'NO_2 begins with drought. Freya enters the forest, completes a quest, and helps restore ecological balance.',
+          'US_4 begins with a journalist and a struggling Kansas ghost town. Local history becomes a community festival.',
+          'Both are restoration because something threatened or declining is revived.',
+          'The category reveals structural similarity. It does not make ecological balance and social memory mean the same thing.'
+        ],
+        [
+          'Visualization helps us move from many stories, to visual patterns, to better questions, and then back to close reading.',
+          'Geography helped reveal differences in setting, imagery, and national context.',
+          'Thematic annotations helped compare what the stories emphasized.',
+          'Resolution categories exposed recurring ways that different stories brought conflict to an end.',
+          'The close reading showed what aggregate categories leave out.',
+          'Patterns tell us where to look. They do not tell us what a story means.'
+        ]
+      ];
+      const focusIds = ['NO_2', 'US_4'];
+      const resolutionOrder = ['reconciliation', 'restoration', 'transformation', 'victory'];
+      const countryNames = { ID: 'Indonesia', JP: 'Japan', NO: 'Norway', US: 'United States', BR: 'Brazil' };
+      const countryColors = { ID: 'var(--accent)', JP: 'var(--violet)', NO: 'var(--blue)', US: 'var(--coral)', BR: 'var(--green)' };
+      const centroids = { ID: [79.5, 50.8], JP: [84.5, 35.8], NO: [52, 26.3], US: [25.5, 34.8], BR: [37.3, 53.9] };
+      const resolutionAnchors = { reconciliation: [28, 31], restoration: [72, 31], transformation: [28, 70], victory: [72, 70] };
+      const countryLabelOffsets = { ID: [1.6, 4.4], JP: [1.8, -2.8], NO: [1.6, -2.8], US: [-18, -2.8], BR: [1.8, 4.2] };
+      const comparisonReasons = {
+        NO_2: 'Restoration: ecological balance is threatened and then restored.',
+        US_4: 'Restoration: a declining town is revived through memory and festival.'
+      };
+      const highlightOpacity = 0.17;
+      const state = { stories: [], stats: null, scene: 0, local: 0, sceneStep: 0, flowTop: 0, raf: 0, firstRender: false };
+
+      const landPaths = [
+        'M8 29 C11 23 18 20 24 20 C28 18 34 20 36 24 C33 27 29 27 29 31 C33 32 36 35 36 39 C32 41 29 40 27 43 C24 46 22 50 18 49 C16 46 15 42 12 40 C10 37 10 34 7 33 Z',
+        'M25 44 C29 43 34 44 38 48 C35 49 31 48 27 47 Z',
+        'M34 49 C40 50 44 54 45 60 C46 66 42 73 39 80 C35 78 32 73 31 67 C29 61 31 55 34 49 Z',
+        'M31 14 C35 11 42 12 45 16 C44 20 39 21 34 20 C30 18 28 16 31 14 Z',
+        'M43 28 C49 23 56 22 61 25 C65 22 71 24 77 25 C84 26 92 30 95 36 C92 39 85 38 81 42 C77 43 75 48 70 47 C66 45 62 49 58 45 C53 43 50 39 46 38 C42 35 40 31 43 28 Z',
+        'M48 40 C54 39 61 43 62 51 C64 59 59 68 54 72 C50 69 48 62 46 56 C44 50 45 44 48 40 Z',
+        'M64 48 C68 50 70 56 68 60 C65 58 64 53 64 48 Z',
+        'M75 51 C78 50 82 51 85 53 C82 55 78 54 75 51 Z',
+        'M84 34 C86 35 87 38 86 41 C84 39 83 36 84 34 Z',
+        'M76 67 C82 65 88 68 89 73 C86 77 80 77 76 73 Z',
+        'M91 78 C95 78 97 81 94 83 C91 83 90 81 91 78 Z'
+      ];
+
+      function hash(n, salt = 0) {
+        const value = Math.sin((n + 1) * 12.9898 + salt * 78.233) * 43758.5453;
+        return value - Math.floor(value);
+      }
+      function clamp(v, min = 0, max = 1) { return Math.max(min, Math.min(max, v)); }
+      function mix(a, b, t) { return a + (b - a) * t; }
+      function ease(t) { return t * t * (3 - 2 * t); }
+      function phase(t, start, end) { return ease(clamp((t - start) / Math.max(0.001, end - start))); }
+      function secondBeatBoundary(scene) {
+        const beats = sceneBodyBeats[scene] || [];
+        return beats.length > 1 ? 1 / beats.length : 1 / 3;
+      }
+      function sceneProgress(scene, local) {
+        return clamp((local + 0.000001) / secondBeatBoundary(scene));
+      }
+      function renderSceneBody(scene, local) {
+        const target = sceneBodyEls[scene];
+        const beats = sceneBodyBeats[scene];
+        if (!target || !beats || !beats.length) return;
+        const index = currentBeat(scene, local);
+        const copy = beats[index];
+        if (target.textContent !== copy) {
+          target.textContent = copy;
+          target.dataset.copyBeat = String(index + 1);
+        }
+      }
+      function currentBeat(scene, local) {
+        const beats = sceneBodyBeats[scene] || [];
+        if (!beats.length) return 0;
+        return Math.min(beats.length - 1, Math.floor((clamp(local) + 0.000001) * beats.length));
+      }
+      function isFocusStory(story) { return focusIds.includes(story.sourceStoryId); }
+      function esc(value) { return String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+
+      function activeFilter(scene, local) {
+        const beat = currentBeat(scene, local);
+        if (beat < 2) return null;
+        if (scene === 1) {
+          const countries = { 2: ['ID'], 3: ['JP'], 4: ['NO'], 5: ['US'], 6: ['BR'] }[beat];
+          return countries ? { type: 'country', values: countries } : null;
+        }
+        if (scene === 2) {
+          if (beat === 2) return { type: 'score', key: 'traditionFocus', min: 0.7 };
+          if (beat === 3) return { type: 'score', key: 'natureFocus', min: 0.7 };
+          if (beat === 4) return { type: 'score', key: 'communityFocus', min: 0.75 };
+          if (beat === 5) return { type: 'country', values: ['JP', 'NO', 'BR'] };
+          if (beat === 6) return { type: 'country', values: ['ID', 'US'] };
+        }
+        if (scene === 3) {
+          const resolutions = { 2: ['reconciliation'], 3: ['restoration'], 4: ['transformation'], 5: ['victory'] }[beat];
+          return resolutions ? { type: 'resolution', values: resolutions } : null;
+        }
+        if (scene === 4) {
+          const countries = { 2: ['JP'], 3: ['ID'], 4: ['NO'], 5: ['US'], 6: ['BR'] }[beat];
+          if (countries) return { type: 'country', values: countries };
+          if (beat === 7) return { type: 'resolution', values: ['reconciliation', 'restoration'] };
+        }
+        return null;
+      }
+
+      function matchesActiveFilter(story, filter) {
+        if (!filter) return true;
+        if (filter.type === 'country') return filter.values.includes(story.countryCode);
+        if (filter.type === 'resolution') return filter.values.includes(story.resolution);
+        if (filter.type === 'score') return Number.isFinite(story[filter.key]) && story[filter.key] >= filter.min;
+        return true;
+      }
+
+      function filteredOpacity(story, scene, local, baseOpacity) {
+        const filter = activeFilter(scene, local);
+        if (!filter || matchesActiveFilter(story, filter)) return baseOpacity;
+        return Math.min(baseOpacity, highlightOpacity);
+      }
+
+      function createPositions(story) {
+        const id = story.id;
+        const ring = Math.sqrt((id - 0.45) / 34);
+        const angle = id * 2.399963 + hash(id, 1) * 0.24;
+        const start = {
+          x: clamp(50 + Math.cos(angle) * ring * 39 + (hash(id, 2) - 0.5) * 2.3, 8.5, 91.5),
+          y: clamp(50 + Math.sin(angle) * ring * 30 + (hash(id, 3) - 0.5) * 2.1, 13, 87)
+        };
+        const [cx, cy] = centroids[story.countryCode];
+        const map = { x: cx + (hash(id, 4) - 0.5) * 5.4, y: cy + (hash(id, 5) - 0.5) * 4.6 };
+        const weights = [story.traditionFocus + 0.05, story.natureFocus + 0.05, story.communityFocus + 0.05];
+        const total = weights.reduce((sum, value) => sum + value, 0);
+        const t = weights[0] / total, n = weights[1] / total, c = weights[2] / total;
+        const theme = {
+          x: clamp(t * 18 + n * 82 + c * 50 + (hash(id, 6) - 0.5) * 4.6, 15, 85),
+          y: clamp(t * 19 + n * 19 + c * 82 + (hash(id, 7) - 0.5) * 4.6, 16, 84)
+        };
+        const [rx, ry] = resolutionAnchors[story.resolution] || [50, 50];
+        const resolution = {
+          x: clamp(rx + (hash(id, 10) - 0.5) * 13.5, 13, 87),
+          y: clamp(ry + (hash(id, 11) - 0.5) * 9.5, 17, 83)
+        };
+        return { start, map, theme, resolution };
+      }
+
+      function comparePoint(story) {
+        if (story.sourceStoryId === 'NO_2') return { x: 32, y: 39 };
+        if (story.sourceStoryId === 'US_4') return { x: 68, y: 39 };
+        return story.positions.map;
+      }
+
+      function pointAt(story, scene, local) {
+        const u = sceneProgress(scene, local);
+        const t = ease(u);
+        const p = story.positions;
+        if (scene === 0) {
+          const drift = reducedMotion ? 0 : Math.sin(u * Math.PI);
+          const xPhase = u * Math.PI * 2 + hash(story.id, 8) * Math.PI * 2;
+          const yPhase = u * Math.PI * 2 + hash(story.id, 9) * Math.PI * 2;
+          return {
+            x: p.start.x + Math.sin(xPhase) * 0.55 * drift,
+            y: p.start.y + Math.cos(yPhase) * 0.42 * drift
+          };
+        }
+        if (scene === 1) return { x: mix(p.start.x, p.map.x, t), y: mix(p.start.y, p.map.y, t) };
+        if (scene === 2) return { x: mix(p.map.x, p.theme.x, t), y: mix(p.map.y, p.theme.y, t) };
+        if (scene === 3) return { x: mix(p.theme.x, p.resolution.x, t), y: mix(p.theme.y, p.resolution.y, t) };
+        if (scene === 4) return { x: mix(p.resolution.x, p.map.x, t), y: mix(p.resolution.y, p.map.y, t) };
+        if (scene === 5) {
+          const focus = comparePoint(story);
+          return { x: mix(p.map.x, focus.x, t), y: mix(p.map.y, focus.y, t) };
+        }
+        if (scene === 6) {
+          const backToMap = phase(u, 0, 0.28);
+          const scatter = phase(u, 0.48, 1);
+          const mapPoint = p.map;
+          if (isFocusStory(story) && u < 0.48) {
+            const focus = comparePoint(story);
+            return { x: mix(focus.x, mapPoint.x, backToMap), y: mix(focus.y, mapPoint.y, backToMap) };
+          }
+          return { x: mix(mapPoint.x, p.start.x, scatter), y: mix(mapPoint.y, p.start.y, scatter) };
+        }
+        return p.start;
+      }
+
+      function mapMarkup(opacity) {
+        const grid = [20, 35, 50, 65, 80].map(x => `<line class="map-grid" x1="${x}" y1="12" x2="${x}" y2="88"/>`).join('') + [22.8, 38.3, 50, 61.7, 77.2].map(y => `<line class="${y === 50 ? 'map-equator' : 'map-grid'}" x1="5" y1="${y}" x2="95" y2="${y}"/>`).join('');
+        const lands = landPaths.map(path => `<path class="map-land" d="${path}"/>`).join('');
+        const labels = Object.entries(centroids).map(([code, [x, y]]) => {
+          const [dx, dy] = countryLabelOffsets[code];
+          return `<text class="country-label" x="${x + dx}" y="${y + dy}" opacity="${opacity}">${countryNames[code]}</text>`;
+        }).join('');
+        return `<g opacity="${opacity}"><g>${grid}</g><g>${lands}</g><text class="axis-label" x="7" y="94">WEST</text><text class="axis-label" x="88" y="94">EAST</text>${labels}</g>`;
+      }
+
+      function themeMarkup(opacity) {
+        const anchors = [{ label: 'TRADITION', x: 18, y: 19 }, { label: 'NATURE', x: 82, y: 19 }, { label: 'COMMUNITY', x: 50, y: 82 }];
+        const lines = `<line class="theme-line" x1="18" y1="19" x2="82" y2="19"/><line class="theme-line" x1="82" y1="19" x2="50" y2="82"/><line class="theme-line" x1="50" y1="82" x2="18" y2="19"/>`;
+        const labels = anchors.map(anchor => `<text class="theme-anchor" x="${anchor.x}" y="${anchor.y - 3}" text-anchor="middle">${anchor.label}</text>`).join('');
+        return `<g opacity="${opacity}">${lines}${labels}</g>`;
+      }
+
+      function resolutionStatsMarkup(opacity) {
+        if (!state.stats) return '';
+        const counts = state.stats.resolutionCounts;
+        return `<g opacity="${opacity}"><text class="map-stat" x="7" y="75">${state.stats.reconRestore} / 34 reconciliation or restoration</text><text class="map-stat map-stat-detail" x="7" y="79">${state.stats.closed} / 34 closed endings in this annotated sample</text><text class="map-stat map-stat-detail" x="7" y="83">Shapes: ${counts.reconciliation} circle / ${counts.restoration} square / ${counts.transformation} triangle / ${counts.victory} diamond</text><text class="map-stat map-stat-detail" x="7" y="87">shape = resolution type, color = national context</text></g>`;
+      }
+
+      function titleCase(value) {
+        return String(value).charAt(0).toUpperCase() + String(value).slice(1);
+      }
+
+      function resolutionClusterMarkup(opacity) {
+        if (!state.stats) return '';
+        return Object.entries(resolutionAnchors).map(([key, [x, y]]) => {
+          const count = state.stats.resolutionCounts[key] || 0;
+          return `<g opacity="${opacity}"><text class="resolution-cluster-label" x="${x}" y="${y - 14}" text-anchor="middle">${titleCase(key)}</text><text class="resolution-cluster-detail" x="${x}" y="${y - 10}" text-anchor="middle">${count} stories</text></g>`;
+        }).join('');
+      }
+
+      function pointGlyph(story, position, radius, fill, opacity, tabindex, shapeMode) {
+        const aria = `${esc(story.sourceStoryId)}, ${esc(story.country)}, ${esc(story.resolution)}`;
+        const common = `class="point" data-story-id="${esc(story.sourceStoryId)}" tabindex="${tabindex}" fill="${fill}" opacity="${opacity}" aria-label="${aria}"`;
+        const r = Number(radius.toFixed(3));
+        if (shapeMode === 'restoration') {
+          const size = r * 2.05;
+          return `<rect ${common} x="${position.x - size / 2}" y="${position.y - size / 2}" width="${size}" height="${size}" rx="0.16"/>`;
+        }
+        if (shapeMode === 'transformation') {
+          const points = `${position.x},${position.y - r * 1.28} ${position.x - r * 1.18},${position.y + r * 1.02} ${position.x + r * 1.18},${position.y + r * 1.02}`;
+          return `<polygon ${common} points="${points}"/>`;
+        }
+        if (shapeMode === 'victory') {
+          const points = `${position.x},${position.y - r * 1.35} ${position.x + r * 1.18},${position.y} ${position.x},${position.y + r * 1.35} ${position.x - r * 1.18},${position.y}`;
+          return `<polygon ${common} points="${points}"/>`;
+        }
+        return `<circle ${common} cx="${position.x}" cy="${position.y}" r="${radius}"/>`;
+      }
+
+      function storyFill(scene, story, u) {
+        if (scene === 0) return 'var(--muted)';
+        if (scene === 6) {
+          const returnToCloud = phase(u, 0.48, 1);
+          const countryWeight = Math.round((1 - returnToCloud) * 100);
+          if (countryWeight <= 0) return 'var(--muted)';
+          return `color-mix(in oklch, ${countryColors[story.countryCode]} ${countryWeight}%, var(--muted))`;
+        }
+        return countryColors[story.countryCode];
+      }
+
+      function textLines(value, x, y, width, className, fill, opacity) {
+        const words = String(value).split(/\s+/);
+        const lines = [];
+        let line = '';
+        words.forEach(word => {
+          const test = line ? `${line} ${word}` : word;
+          if (test.length > width && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = test;
+          }
+        });
+        if (line) lines.push(line);
+        return `<text class="${className}" x="${x}" y="${y}" fill="${fill}" opacity="${opacity}">${lines.slice(0, 3).map((copy, index) => `<tspan x="${x}" dy="${index === 0 ? 0 : 3.35}">${esc(copy)}</tspan>`).join('')}</text>`;
+      }
+
+      function comparisonMarkup(opacity) {
+        const configs = [
+          { id: 'NO_2', x: 15, w: 34, color: 'var(--blue)' },
+          { id: 'US_4', x: 51, w: 34, color: 'var(--coral)' }
+        ];
+        return configs.map(config => {
+          const story = state.stories.find(row => row.sourceStoryId === config.id);
+          if (!story) return '';
+          const markerX = config.x + config.w / 2;
+          const summary = textLines(story.summary, config.x + 3, 52, 28, 'comparison-summary', 'var(--muted)', opacity);
+          const reason = textLines(comparisonReasons[story.sourceStoryId], config.x + 3, 69, 28, 'comparison-reason', 'var(--fg)', opacity);
+          const markers = textLines(story.culturalMarkers.slice(0, 3).join(' / '), config.x + 3, 86, 28, 'resolution-label', config.color, opacity);
+          return `<g opacity="${opacity}"><rect class="comparison-panel" x="${config.x}" y="9" width="${config.w}" height="80" rx="1.2" opacity="${opacity}"/><text class="comparison-label" x="${config.x + 3}" y="16" fill="${config.color}">${esc(story.country)} - ${esc(story.sourceStoryId)}</text><text class="resolution-label" x="${config.x + 3}" y="22" fill="${config.color}" opacity="${opacity}">restoration · closed</text><rect x="${markerX - 2.05}" y="36.95" width="4.1" height="4.1" rx="0.18" fill="${config.color}" stroke="var(--bg)" stroke-width="0.5" opacity="${opacity}"/>${summary}${reason}${markers}</g>`;
+        }).join('');
+      }
+
+      function renderLegend(scene) {
+        const shapeKey = '<span class="legend-item">circle = reconciliation</span><span class="legend-item">square = restoration</span><span class="legend-item">triangle = transformation</span><span class="legend-item">diamond = victory</span>';
+        if (scene === 3) {
+          legend.innerHTML = '<span class="legend-note">Position = resolution type. Color = national context. Mentioned ending types stay at full strength; context stays 83% transparent.</span>' + shapeKey;
+        } else if (scene === 5) {
+          legend.innerHTML = '<span class="legend-note">Both highlighted stories are restoration, but the meaning of restoration differs.</span><span class="legend-item"><i class="legend-swatch no"></i>NO_2 Norway</span><span class="legend-item"><i class="legend-swatch us"></i>US_4 United States</span>';
+        } else if (scene === 6) {
+          legend.innerHTML = '<span class="legend-note">The same 34 stories return from comparison, to map, to their original scattered field.</span><span class="legend-item"><i class="legend-swatch dot"></i>patterns to questions to close reading</span>';
+        } else if (scene === 4) {
+          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Shape = resolution type. Mentioned groups stay at full strength; context stays 83% transparent.</span>' + shapeKey;
+        } else if (scene === 2) {
+          legend.innerHTML = '<span class="legend-note">Position = thematic emphasis. Color = national context. Mentioned themes or countries stay at full strength; context stays 83% transparent.</span><span class="legend-item"><i class="legend-swatch dot"></i>tradition / nature / community</span>';
+        } else if (scene === 1) {
+          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Mentioned countries stay at full strength; context stays 83% transparent.</span><span class="legend-item"><i class="legend-swatch dot"></i>country color becomes identity</span>';
+        } else {
+          legend.innerHTML = '<span class="legend-note">Start with individual stories before interpreting origin, theme, or ending.</span><span class="legend-item"><i class="legend-swatch dot"></i>one dot = one generated story</span>';
+        }
+      }
+
+      function render(scene, local) {
+        if (!state.stories.length) return;
+        const u = sceneProgress(scene, local);
+        const t = ease(u);
+        const returnMap = phase(u, 0, 0.28);
+        const restoreAll = phase(u, 0.28, 0.46);
+        const scatterReturn = phase(u, 0.48, 1);
+        const mapOpacity = scene === 1 ? mix(0.03, 1, t) : scene === 2 ? mix(1, 0, t) : scene === 3 ? 0 : scene === 4 ? mix(0, 1, t) : scene === 5 ? mix(1, 0.12, t) : scene === 6 ? (u < 0.48 ? mix(0.12, 1, returnMap) : mix(1, 0, scatterReturn)) : 0;
+        const themeOpacity = scene === 2 ? mix(0, 1, t) : scene === 3 ? mix(1, 0, t) : 0;
+        const clusterOpacity = scene === 3 ? mix(0, 1, t) : scene === 4 ? mix(1, 0, t) : 0;
+        const compareOpacity = scene === 5 ? mix(0, 1, t) : scene === 6 ? mix(1, 0, phase(u, 0, 0.22)) : 0;
+        let content = mapMarkup(clamp(mapOpacity));
+        content += themeMarkup(clamp(themeOpacity));
+        if (scene === 3 || scene === 4) content += resolutionClusterMarkup(clamp(clusterOpacity));
+        if (scene === 4) content += resolutionStatsMarkup(t);
+        if (scene === 5) content += comparisonMarkup(clamp(compareOpacity));
+        if (scene === 6) content += comparisonMarkup(clamp(compareOpacity));
+
+        const dots = state.stories.map(story => {
+          const position = pointAt(story, scene, local);
+          const focus = isFocusStory(story);
+          const fadeFocus = scene === 5 ? t : scene === 6 ? restoreAll : 1;
+          const baseOpacity = scene === 5 ? (focus ? 0.96 : mix(0.88, 0.06, t)) : scene === 6 ? (focus ? mix(0.96, 0.92, restoreAll) : mix(0.06, 0.92, fadeFocus)) : 0.92;
+          const opacity = filteredOpacity(story, scene, local, baseOpacity);
+          const fill = storyFill(scene, story, u);
+          const radius = focus && (scene === 5 || (scene === 6 && u < 0.3)) ? 1.85 : 1.35;
+          const halo = focus && (scene === 5 || (scene === 6 && u < 0.3)) ? `<circle class="point-halo" cx="${position.x}" cy="${position.y}" r="${radius + 2.5}" opacity="${opacity * 0.72}"/>` : '';
+          const shapeMode = scene === 3 || scene === 4 || scene === 5 || (scene === 6 && u < 0.48) ? story.resolution : null;
+          return `${halo}${pointGlyph(story, position, radius, fill, opacity, opacity > 0.18 ? 0 : -1, shapeMode)}`;
+        }).join('');
+        content += `<g>${dots}</g>`;
+        svg.innerHTML = content;
+        renderLegend(scene);
+        renderSceneBody(scene, local);
+        progressLabel.textContent = `${String(scene + 1).padStart(2, '0')} / 07`;
+        visualTitle.textContent = sceneTitles[scene];
+        sceneStatusText.textContent = `Scene ${String(scene + 1).padStart(2, '0')} — ${sceneNames[scene]}`;
+      }
+
+      function updateMetrics() {
+        const firstScene = flow.querySelector('.story-scene');
+        state.sceneStep = firstScene ? firstScene.getBoundingClientRect().height : window.innerHeight;
+        state.flowTop = flow.getBoundingClientRect().top + window.scrollY;
+      }
+
+      function updateFromScroll() {
+        if (!state.stories.length) return;
+        updateMetrics();
+        const maxRaw = sceneNames.length - 1 + 0.999;
+        const raw = clamp((window.scrollY - state.flowTop + 2) / Math.max(1, state.sceneStep), 0, maxRaw);
+        const scene = Math.min(sceneNames.length - 1, Math.floor(raw));
+        const local = scene === sceneNames.length - 1 ? clamp(raw - (sceneNames.length - 1), 0, 1) : raw - scene;
+        state.scene = scene;
+        state.local = local;
+        if (!state.raf) state.raf = requestAnimationFrame(() => { state.raf = 0; render(state.scene, state.local); });
+        localStorage.setItem('narrativeLensScroll', String(Math.round(window.scrollY)));
+      }
+
+      function limitWheelScroll(event) {
+        if (event.defaultPrevented || event.ctrlKey || event.metaKey || Math.abs(event.deltaY) < 1) return;
+        const flowRect = flow.getBoundingClientRect();
+        if (flowRect.top > window.innerHeight || flowRect.bottom < 0) return;
+        const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
+        const rawDelta = event.deltaY * unit;
+        const maxDelta = Math.max(96, window.innerHeight * 0.24);
+        const cappedDelta = clamp(rawDelta * 0.44, -maxDelta, maxDelta);
+        event.preventDefault();
+        window.scrollBy({ top: cappedDelta, left: 0, behavior: 'auto' });
+      }
+
+      function positionTooltip(event, story) {
+        if (!story) return;
+        tooltip.innerHTML = `<div class="tip-id">${esc(story.sourceStoryId)} · ${esc(story.country)}</div><p>${esc(story.summary)}</p><div class="tip-meta">Source: ${esc(story.emotion)} emotion, ${Math.round(story.emotionConfidence * 100)}% confidence<br>Interpretation: ${esc(story.resolution)} · ${esc(story.closure)}<br>Visualization: T ${story.traditionFocus.toFixed(2)} / N ${story.natureFocus.toFixed(2)} / C ${story.communityFocus.toFixed(2)}<br>${story.culturalMarkers.slice(0, 3).map(esc).join(' / ')}</div>`;
+        const x = Math.min(window.innerWidth - tooltip.offsetWidth - 16, event.clientX + 14);
+        const y = Math.min(window.innerHeight - tooltip.offsetHeight - 16, event.clientY + 14);
+        tooltip.style.left = `${Math.max(16, x)}px`;
+        tooltip.style.top = `${Math.max(16, y)}px`;
+        tooltip.classList.add('is-visible');
+      }
+      function hideTooltip() { tooltip.classList.remove('is-visible'); }
+
+      function renderComparisonCards() {
+        const selected = focusIds.map(id => state.stories.find(story => story.sourceStoryId === id)).filter(Boolean);
+        document.querySelector('[data-od-id="comparison-cards"]').innerHTML = selected.map(story => `<article class="comparison-card" data-od-id="comparison-card-${story.sourceStoryId.toLowerCase().replace('_', '-')}"><h3>${esc(story.sourceStoryId)} <span class="country">${esc(story.country)}</span></h3><p>${esc(story.summary)}</p><p>${esc(comparisonReasons[story.sourceStoryId])}</p><div class="marker-row">${story.culturalMarkers.slice(0, 3).map(marker => `<span class="marker">${esc(marker)}</span>`).join('')}</div><div class="resolution-line">${esc(story.resolution)} · ${esc(story.closure)} ending</div></article>`).join('');
+      }
+
+      function validatePayload(payload) {
+        if (!Array.isArray(payload.stories) || payload.stories.length !== 34) throw new Error('Expected exactly 34 stories');
+        const ids = new Set();
+        payload.stories.forEach(story => {
+          const required = ['id', 'sourceStoryId', 'country', 'countryCode', 'summary', 'emotion', 'emotionConfidence', 'resolution', 'closure', 'culturalMarkers', 'arc', 'communityFocus', 'traditionFocus', 'natureFocus'];
+          required.forEach(key => {
+            if (story[key] === undefined || story[key] === null) throw new Error(`Missing ${key} on ${story.sourceStoryId || 'story'}`);
+          });
+          if (ids.has(story.sourceStoryId)) throw new Error(`Duplicate source story ID ${story.sourceStoryId}`);
+          ids.add(story.sourceStoryId);
+          if (!Number.isFinite(story.id)) throw new Error(`Invalid numeric id for ${story.sourceStoryId}`);
+          if (!Number.isFinite(story.emotionConfidence)) throw new Error(`Invalid emotion confidence for ${story.sourceStoryId}`);
+          ['communityFocus', 'traditionFocus', 'natureFocus'].forEach(key => {
+            if (!Number.isFinite(story[key]) || story[key] < 0 || story[key] > 1) throw new Error(`Invalid ${key} for ${story.sourceStoryId}`);
+          });
+          if (!centroids[story.countryCode]) throw new Error(`Missing centroid for ${story.countryCode}`);
+          if (!Array.isArray(story.arc) || story.arc.length !== 4) throw new Error(`Expected four arc values for ${story.sourceStoryId}`);
+          story.arc.forEach(value => {
+            if (!Number.isFinite(value) || value < 0 || value > 1) throw new Error(`Invalid arc value for ${story.sourceStoryId}`);
+          });
+          if (!Array.isArray(story.culturalMarkers) || story.culturalMarkers.length < 2) throw new Error(`Expected markers for ${story.sourceStoryId}`);
+          if (!resolutionOrder.includes(story.resolution)) throw new Error(`Unexpected resolution type for ${story.sourceStoryId}`);
+        });
+        if (ids.size !== 34) throw new Error('Expected 34 unique source story IDs');
+        focusIds.forEach(id => {
+          if (!ids.has(id)) throw new Error(`Missing required comparison story ${id}`);
+        });
+        const reconRestore = payload.stories.filter(story => story.resolution === 'reconciliation' || story.resolution === 'restoration').length;
+        const closed = payload.stories.filter(story => story.closure === 'closed').length;
+        const resolutionCounts = resolutionOrder.reduce((counts, key) => {
+          counts[key] = payload.stories.filter(story => story.resolution === key).length;
+          return counts;
+        }, {});
+        if (reconRestore !== 22 || closed !== 33) throw new Error('Dataset statistics do not match the PRD findings');
+        return { reconRestore, closed, resolutionCounts };
+      }
+
+      function mountPayload(payload) {
+        state.stats = validatePayload(payload);
+        state.stories = payload.stories.map(story => ({ ...story, positions: createPositions(story) }));
+        renderComparisonCards();
+        loading.remove();
+        svg.hidden = false;
+        updateMetrics();
+        const saved = Number(localStorage.getItem('narrativeLensScroll'));
+        if (saved > 0 && !reducedMotion) window.scrollTo({ top: saved, behavior: 'auto' });
+        state.firstRender = true;
+        updateFromScroll();
+      }
+
+      function loadEmbeddedPayload() {
+        if (!embeddedData || !embeddedData.textContent.trim()) throw new Error('Missing embedded story fallback');
+        return JSON.parse(embeddedData.textContent);
+      }
+
+      async function load() {
+        try {
+          const response = await fetch(DATA_URL, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          mountPayload(await response.json());
+        } catch (fetchError) {
+          try {
+            mountPayload(loadEmbeddedPayload());
+          } catch (fallbackError) {
+            loading.className = 'load-error';
+            loading.textContent = 'The story dataset could not be loaded from data/narrative_lens_34.json, and the embedded preview fallback could not be parsed.';
+          }
+        }
+      }
+
+      svg.addEventListener('pointerover', event => {
+        const target = event.target.closest('.point');
+        if (!target) return;
+        positionTooltip(event, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
+      });
+      svg.addEventListener('pointermove', event => {
+        const target = event.target.closest('.point');
+        if (target) positionTooltip(event, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
+      });
+      svg.addEventListener('pointerout', event => { if (!event.relatedTarget || !event.relatedTarget.closest('.point')) hideTooltip(); });
+      svg.addEventListener('focusin', event => {
+        const target = event.target.closest('.point');
+        if (target) positionTooltip({ clientX: target.getBoundingClientRect().right, clientY: target.getBoundingClientRect().top }, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
+      });
+      svg.addEventListener('focusout', hideTooltip);
+      window.addEventListener('wheel', limitWheelScroll, { passive: false });
+      window.addEventListener('scroll', updateFromScroll, { passive: true });
+      window.addEventListener('resize', () => { updateMetrics(); updateFromScroll(); });
+      load();
+    })();
+  </script>
+</body>
+</html>
