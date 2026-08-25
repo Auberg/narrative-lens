@@ -505,7 +505,7 @@
         <div class="story-copy">
           <div class="scene-kicker">Scene 03 / 07 · themes</div>
           <h2 data-od-id="themes-heading">Now look beyond location. What does each story emphasize?</h2>
-          <p class="scene-body" data-scene-body="2" data-od-id="themes-copy">The map fades. Each point moves between tradition, nature, and community using the annotated values in the JSON.</p>
+          <p class="scene-body" data-scene-body="2" data-od-id="themes-copy">The dots leave the map and settle into three story emphases: tradition, nature, and community.</p>
           <div class="scene-note"><span class="note-mark">03</span><span><strong>Theme is annotation.</strong> These positions compare emphasis; they are not measurements of culture.</span></div>
         </div>
       </article>
@@ -591,8 +591,8 @@
           'Brazil shows the Amazon and environmental conflict strongly, with rainforest protection, resistance, and collective action.'
         ],
         [
-          'The map fades. Each point moves between tradition, nature, and community using the annotated values in the JSON.',
-          'Pause on the full thematic landscape first: every story remains visible before individual emphases are highlighted.',
+          'The dots leave the map and settle into three story emphases: tradition, nature, and community.',
+          'First read the whole thematic landscape: every story stays visible before any emphasis is singled out.',
           'Tradition means heritage, ritual, ancestors, continuity, customs, and preserving what is inherited.',
           'Nature means the environment is central to setting, conflict, or resolution: forests, seasons, rainforests, and ecological threats.',
           'Community means collective wellbeing, cooperation, villages, families, and solving problems together.',
@@ -601,7 +601,7 @@
         ],
         [
           'We classify each story ending into one of four broad resolution types: reconciliation, restoration, transformation, or victory.',
-          'Start with the complete resolution field: all four ending types stay visible before the scene isolates each category.',
+          'First see all four ending types together. Then each category is highlighted in turn.',
           'Reconciliation repairs a relationship, social tension, or separation. The central outcome is coming together.',
           'Restoration brings something damaged, threatened, or lost back into balance.',
           'Transformation changes the protagonist, future, or way of life into something fundamentally new.',
@@ -610,7 +610,7 @@
         ],
         [
           'Same 34 stories. Same country colors. Now each dot carries one new piece of information: its shape tells you how that story ends.',
-          'Begin with the full map callback: every story is visible, then each national context is brought forward in sequence.',
+          'Return to the map with every story visible. Then each national context comes forward one at a time.',
           'Japan resolves entirely through reconciliation or restoration in this small sample: four circles and three squares.',
           'Indonesia looks different: four of seven stories are transformation, making fundamental personal change especially visible.',
           'Norway is more mixed. Restoration is most common, but all four resolution types appear.',
@@ -998,8 +998,8 @@
         if (flowRect.top > window.innerHeight || flowRect.bottom < 0) return;
         const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
         const rawDelta = event.deltaY * unit;
-        const maxDelta = Math.max(96, window.innerHeight * 0.24);
-        const cappedDelta = clamp(rawDelta * 0.44, -maxDelta, maxDelta);
+        const maxDelta = Math.max(72, window.innerHeight * 0.18);
+        const cappedDelta = clamp(rawDelta * 0.32, -maxDelta, maxDelta);
         event.preventDefault();
         window.scrollBy({ top: cappedDelta, left: 0, behavior: 'auto' });
       }
