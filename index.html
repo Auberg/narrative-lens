@@ -235,6 +235,29 @@
     .legend-swatch.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
     .legend-swatch.no { background: var(--blue); }
     .legend-swatch.us { background: var(--coral); }
+    .legend-shape {
+      width: 9px;
+      height: 9px;
+      display: inline-block;
+      flex: 0 0 auto;
+      background: var(--quiet);
+    }
+    .legend-shape.circle { border-radius: 50%; }
+    .legend-shape.square { border-radius: 1.5px; }
+    .legend-shape.triangle {
+      width: 0;
+      height: 0;
+      background: transparent;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 9px solid var(--quiet);
+    }
+    .legend-shape.diamond {
+      width: 8px;
+      height: 8px;
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
 
     .narrative-flow {
       min-width: 0;
@@ -905,7 +928,7 @@
       }
 
       function renderLegend(scene) {
-        const shapeKey = '<span class="legend-item">circle = reconciliation</span><span class="legend-item">square = restoration</span><span class="legend-item">triangle = transformation</span><span class="legend-item">diamond = victory</span>';
+        const shapeKey = '<span class="legend-item"><i class="legend-shape circle" aria-hidden="true"></i>reconciliation</span><span class="legend-item"><i class="legend-shape square" aria-hidden="true"></i>restoration</span><span class="legend-item"><i class="legend-shape triangle" aria-hidden="true"></i>transformation</span><span class="legend-item"><i class="legend-shape diamond" aria-hidden="true"></i>victory</span>';
         if (scene === 3) {
           legend.innerHTML = '<span class="legend-note">Position = resolution type. Color = national context. Mentioned ending types stay at full strength; context stays 83% transparent.</span>' + shapeKey;
         } else if (scene === 5) {
