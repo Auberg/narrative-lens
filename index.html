@@ -259,6 +259,12 @@
       align-items: flex-start;
       padding-top: 24vh;
     }
+    .closing-section {
+      min-height: calc(100vh - var(--header-height));
+      display: flex;
+      align-items: flex-start;
+      padding: 24vh 0 38vh;
+    }
     .story-copy {
       position: sticky;
       top: calc(var(--header-height) + 34px);
@@ -266,6 +272,7 @@
       z-index: 2;
       max-width: 430px;
     }
+    .closing-section .story-copy { position: static; }
     .scene-kicker {
       display: flex;
       align-items: center;
@@ -280,7 +287,8 @@
     }
     .scene-kicker::before { content: ""; width: 28px; height: 1px; background: currentColor; }
     .story-scene h1,
-    .story-scene h2 {
+    .story-scene h2,
+    .closing-section h2 {
       margin: 0;
       color: var(--fg);
       font-family: var(--display);
@@ -291,8 +299,10 @@
       text-wrap: balance;
     }
     .story-scene h1 { max-width: 590px; font-size: 58px; }
-    .story-scene h2 { max-width: 420px; font-size: 45px; }
-    .story-scene p {
+    .story-scene h2,
+    .closing-section h2 { max-width: 420px; font-size: 45px; }
+    .story-scene p,
+    .closing-section p {
       max-width: 390px;
       margin: 26px 0 0;
       color: var(--muted);
@@ -418,13 +428,18 @@
         min-height: 320vh;
         padding-top: calc(clamp(300px, 42vh, 420px) + 112px);
       }
+      .closing-section {
+        min-height: auto;
+        padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 150vh;
+      }
       .story-scene:first-child { padding-top: calc(clamp(300px, 42vh, 420px) + 112px); }
       .story-copy {
         max-width: 620px;
         top: calc(var(--header-height) + clamp(300px, 42vh, 420px) + 44px);
       }
       .story-scene h1 { font-size: 46px; }
-      .story-scene h2 { font-size: 38px; }
+      .story-scene h2,
+      .closing-section h2 { font-size: 38px; }
     }
     @media (max-width: 560px) {
       .site-header { padding: 0 18px; }
@@ -446,10 +461,13 @@
         min-height: 320vh;
         padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
       }
+      .closing-section { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
       .story-scene:first-child { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
       .story-scene h1 { font-size: 35px; }
-      .story-scene h2 { font-size: 32px; }
-      .story-scene p { font-size: 17px; }
+      .story-scene h2,
+      .closing-section h2 { font-size: 32px; }
+      .story-scene p,
+      .closing-section p { font-size: 17px; }
       .story-copy { top: calc(var(--header-height) + clamp(260px, 38vh, 310px) + 44px); }
       .scene-body { min-height: 11em; }
       .comparison-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -545,6 +563,14 @@
           <div class="scene-note"><span class="note-mark">07</span><span><strong>Return to the story.</strong> Scroll back through the sequence to reverse every transition and revisit the reasoning.</span></div>
         </div>
       </article>
+
+      <section class="closing-section" data-od-id="thank-you-section" aria-label="Closing note">
+        <div class="story-copy">
+          <div class="scene-kicker">Thank you</div>
+          <h2 data-od-id="thank-you-heading">Thank you for checking this presentation.</h2>
+          <p data-od-id="thank-you-copy">If you are interested in discussing the work, the dataset, or the prototype further, please feel free to contact me.</p>
+        </div>
+      </section>
     </section>
   </main>
 
