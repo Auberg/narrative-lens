@@ -862,12 +862,7 @@
 
       function storyFill(scene, story, u) {
         if (scene === 0) return 'var(--muted)';
-        if (scene === 6) {
-          const returnToCloud = phase(u, 0.48, 1);
-          const countryWeight = Math.round((1 - returnToCloud) * 100);
-          if (countryWeight <= 0) return 'var(--muted)';
-          return `color-mix(in oklch, ${countryColors[story.countryCode]} ${countryWeight}%, var(--muted))`;
-        }
+        if (scene === 6) return countryColors[story.countryCode];
         return countryColors[story.countryCode];
       }
 
@@ -911,7 +906,7 @@
         } else if (scene === 5) {
           legend.innerHTML = '<span class="legend-note">Both highlighted stories are restoration, but the meaning of restoration differs.</span><span class="legend-item"><i class="legend-swatch no"></i>NO_2 Norway</span><span class="legend-item"><i class="legend-swatch us"></i>US_4 United States</span>';
         } else if (scene === 6) {
-          legend.innerHTML = '<span class="legend-note">The same 34 stories return from comparison, to map, to their original scattered field.</span><span class="legend-item"><i class="legend-swatch dot"></i>patterns to questions to close reading</span>';
+          legend.innerHTML = '<span class="legend-note">The same shapes and country colors return to each story&rsquo;s original position.</span>' + shapeKey;
         } else if (scene === 4) {
           legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Shape = resolution type. Mentioned groups stay at full strength; other points stay at 17% opacity.</span>' + shapeKey;
         } else if (scene === 2) {
@@ -950,7 +945,7 @@
           const fill = storyFill(scene, story, u);
           const radius = focus && (scene === 5 || (scene === 6 && u < 0.3)) ? 1.85 : 1.35;
           const halo = focus && (scene === 5 || (scene === 6 && u < 0.3)) ? `<circle class="point-halo" cx="${position.x}" cy="${position.y}" r="${radius + 2.5}" opacity="${opacity * 0.72}"/>` : '';
-          const shapeMode = scene === 3 || scene === 4 || scene === 5 || (scene === 6 && u < 0.48) ? story.resolution : null;
+          const shapeMode = scene === 3 || scene === 4 || scene === 5 || scene === 6 ? story.resolution : null;
           return `${halo}${pointGlyph(story, position, radius, fill, opacity, opacity > 0.18 ? 0 : -1, shapeMode)}`;
         }).join('');
         content += `<g>${dots}</g>`;
