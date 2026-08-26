@@ -463,7 +463,7 @@
 <body>
   <header class="site-header" data-od-id="site-header">
     <div class="brand-lockup" data-od-id="brand-lockup"><strong>Narrative Lens</strong><span>/ research prototype</span></div>
-    <div class="header-status" data-od-id="scene-status"><i class="status-dot" aria-hidden="true"></i><span id="scene-status-text">Scene 01 — scattered</span></div>
+    <div class="header-status" data-od-id="scene-status"><i class="status-dot" aria-hidden="true"></i><span id="scene-status-text">Scene 01 — data</span></div>
   </header>
 
   <main class="experience" data-od-id="narrative-experience">
@@ -471,8 +471,8 @@
       <div class="visual-sticky" data-od-id="visual-sticky">
         <div class="visual-heading"><strong id="visual-title">Now showing: What one dot means</strong><span id="visual-progress">01 / 07</span></div>
         <div class="visual-instruction" data-od-id="visual-scroll-instruction">
-          <strong>Each Scene told a story, Scroll to learn more</strong>
-          <span>34 stories. 5 national contexts. Hover or tab to a dot for story details.</span>
+          <strong>Each scene tells a story. Scroll to learn more.</strong>
+          <span>34 stories. 5 national contexts. Select a dot for story details; keyboard users can tab through the field.</span>
         </div>
         <div class="visual-frame" data-od-id="visual-frame">
           <div class="loading" id="loading">Loading the 34 story objects…</div>
@@ -524,7 +524,7 @@
           <div class="scene-kicker">Scene 05 / 07 · resolution x origin</div>
           <h2 data-od-id="resolution-heading">Now put those endings back where the stories began.</h2>
           <p class="scene-body" data-scene-body="4" data-od-id="resolution-copy">Same 34 stories. Same country colors. Now each dot carries one new piece of information: its shape tells you how that story ends.</p>
-          <div class="scene-note"><span class="note-mark">05</span><span><strong>Map callback.</strong> Position is national context; color is national context; shape is resolution type.</span></div>
+          <div class="scene-note"><span class="note-mark">05</span><span><strong>Back to the map.</strong> Position is national context; color is national context; shape is resolution type.</span></div>
         </div>
       </article>
 
@@ -907,17 +907,17 @@
       function renderLegend(scene) {
         const shapeKey = '<span class="legend-item">circle = reconciliation</span><span class="legend-item">square = restoration</span><span class="legend-item">triangle = transformation</span><span class="legend-item">diamond = victory</span>';
         if (scene === 3) {
-          legend.innerHTML = '<span class="legend-note">Position = resolution type. Color = national context. Mentioned ending types stay at full strength; context stays 83% transparent.</span>' + shapeKey;
+          legend.innerHTML = '<span class="legend-note">Position = resolution type. Color = national context. Mentioned endings stay at full strength; other points stay at 17% opacity.</span>' + shapeKey;
         } else if (scene === 5) {
           legend.innerHTML = '<span class="legend-note">Both highlighted stories are restoration, but the meaning of restoration differs.</span><span class="legend-item"><i class="legend-swatch no"></i>NO_2 Norway</span><span class="legend-item"><i class="legend-swatch us"></i>US_4 United States</span>';
         } else if (scene === 6) {
           legend.innerHTML = '<span class="legend-note">The same 34 stories return from comparison, to map, to their original scattered field.</span><span class="legend-item"><i class="legend-swatch dot"></i>patterns to questions to close reading</span>';
         } else if (scene === 4) {
-          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Shape = resolution type. Mentioned groups stay at full strength; context stays 83% transparent.</span>' + shapeKey;
+          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Shape = resolution type. Mentioned groups stay at full strength; other points stay at 17% opacity.</span>' + shapeKey;
         } else if (scene === 2) {
-          legend.innerHTML = '<span class="legend-note">Position = thematic emphasis. Color = national context. Mentioned themes or countries stay at full strength; context stays 83% transparent.</span><span class="legend-item"><i class="legend-swatch dot"></i>tradition / nature / community</span>';
+          legend.innerHTML = '<span class="legend-note">Position = thematic emphasis. Color = national context. Mentioned themes or countries stay at full strength; other points stay at 17% opacity.</span><span class="legend-item"><i class="legend-swatch dot"></i>tradition / nature / community</span>';
         } else if (scene === 1) {
-          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Mentioned countries stay at full strength; context stays 83% transparent.</span><span class="legend-item"><i class="legend-swatch dot"></i>country color becomes identity</span>';
+          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Mentioned countries stay at full strength; other points stay at 17% opacity.</span><span class="legend-item"><i class="legend-swatch dot"></i>country color becomes identity</span>';
         } else {
           legend.innerHTML = '<span class="legend-note">Start with individual stories before interpreting origin, theme, or ending.</span><span class="legend-item"><i class="legend-swatch dot"></i>one dot = one generated story</span>';
         }
@@ -1103,12 +1103,19 @@
         const target = event.target.closest('.point');
         if (target) positionTooltip(event, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
       });
+      svg.addEventListener('pointerdown', event => {
+        const target = event.target.closest('.point');
+        if (!target) return;
+        positionTooltip(event, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
+      });
       svg.addEventListener('pointerout', event => { if (!event.relatedTarget || !event.relatedTarget.closest('.point')) hideTooltip(); });
       svg.addEventListener('focusin', event => {
         const target = event.target.closest('.point');
         if (target) positionTooltip({ clientX: target.getBoundingClientRect().right, clientY: target.getBoundingClientRect().top }, state.stories.find(story => story.sourceStoryId === target.dataset.storyId));
       });
       svg.addEventListener('focusout', hideTooltip);
+      svg.addEventListener('keydown', event => { if (event.key === 'Escape') hideTooltip(); });
+      document.addEventListener('pointerdown', event => { if (!event.target.closest('#viz')) hideTooltip(); });
       window.addEventListener('wheel', limitWheelScroll, { passive: false });
       window.addEventListener('scroll', updateFromScroll, { passive: true });
       window.addEventListener('resize', () => { updateMetrics(); updateFromScroll(); });
