@@ -96,7 +96,7 @@
       max-width: 1600px;
       min-height: 100vh;
       margin: 0 auto;
-      padding: calc(var(--header-height) + 30px) clamp(20px, 4vw, 64px) 90px;
+      padding: calc(var(--header-height) + 30px) clamp(20px, 4vw, 64px) 0;
     }
 
     .visual-column { min-width: 0; }
@@ -238,7 +238,7 @@
 
     .narrative-flow {
       min-width: 0;
-      padding-bottom: calc(140vh - var(--header-height));
+      padding-bottom: 0;
     }
     .story-scene {
       min-height: calc(340vh - var(--header-height) - var(--header-height));
@@ -260,10 +260,10 @@
       padding-top: 24vh;
     }
     .closing-section {
-      min-height: calc(190vh - var(--header-height));
+      min-height: calc(124vh - var(--header-height) - 34px);
       display: flex;
       align-items: flex-start;
-      padding: 24vh 0 86vh;
+      padding: 24vh 0 0;
     }
     .story-copy {
       position: sticky;
@@ -362,9 +362,9 @@
     .resolution-line { margin-top: 15px; color: var(--accent); font-family: var(--mono); font-size: 10px; letter-spacing: 0; text-transform: uppercase; }
 
     .about-data {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 0 clamp(20px, 4vw, 64px) 70px;
+      max-width: 430px;
+      margin: 0;
+      padding: 0 0 70px;
       color: var(--quiet);
       font-family: var(--mono);
       font-size: 10px;
@@ -417,7 +417,7 @@
       }
       .visual-sticky { position: static; height: auto; min-height: 0; padding: 0; }
       .visual-frame { height: clamp(300px, 42vh, 420px); min-height: 300px; }
-      .narrative-flow { padding-bottom: 130vh; }
+      .narrative-flow { padding-bottom: 0; }
       .story-scene {
         min-height: 320vh;
         align-items: start;
@@ -428,8 +428,8 @@
         padding-top: calc(clamp(300px, 42vh, 420px) + 112px);
       }
       .closing-section {
-        min-height: 210vh;
-        padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 110vh;
+        min-height: calc(100vh + 68px);
+        padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 0;
       }
       .story-scene:first-child { padding-top: calc(clamp(300px, 42vh, 420px) + 112px); }
       .story-copy {
@@ -460,7 +460,10 @@
         min-height: 320vh;
         padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
       }
-      .closing-section { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
+      .closing-section {
+        min-height: calc(100vh + 72px);
+        padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
+      }
       .story-scene:first-child { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
       .story-scene h1 { font-size: 35px; }
       .story-scene h2,
@@ -563,6 +566,10 @@
         </div>
       </article>
 
+      <aside class="about-data" data-od-id="about-data">
+        <strong>About the data.</strong> This portfolio sample contains 34 AI-generated stories from the public AI STORIES dataset, written with gpt-4o-mini. Source story IDs and automated emotion labels are retained; summaries, narrative classifications, and visualization dimensions are interpretive annotations created for this prototype. The sample does not represent real national storytelling traditions or cultures.
+      </aside>
+
       <section class="closing-section" data-od-id="thank-you-section" aria-label="Closing note">
         <div class="story-copy">
           <div class="scene-kicker">Thank you</div>
@@ -573,9 +580,6 @@
     </section>
   </main>
 
-  <aside class="about-data" data-od-id="about-data">
-    <strong>About the data.</strong> This portfolio sample contains 34 AI-generated stories from the public AI STORIES dataset, written with gpt-4o-mini. Source story IDs and automated emotion labels are retained; summaries, narrative classifications, and visualization dimensions are interpretive annotations created for this prototype. The sample does not represent real national storytelling traditions or cultures.
-  </aside>
   <div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
   <!-- Preview fallback generated from data/narrative_lens_34.json; keep that file authoritative. -->
   <script type="application/json" id="story-data-fallback">
