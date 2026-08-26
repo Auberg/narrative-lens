@@ -826,8 +826,7 @@
 
       function resolutionStatsMarkup(opacity) {
         if (!state.stats) return '';
-        const counts = state.stats.resolutionCounts;
-        return `<g opacity="${opacity}"><text class="map-stat" x="7" y="75">${state.stats.reconRestore} / 34 reconciliation or restoration</text><text class="map-stat map-stat-detail" x="7" y="79">${state.stats.closed} / 34 closed endings in this annotated sample</text><text class="map-stat map-stat-detail" x="7" y="83">Shapes: ${counts.reconciliation} circle / ${counts.restoration} square / ${counts.transformation} triangle / ${counts.victory} diamond</text><text class="map-stat map-stat-detail" x="7" y="87">shape = resolution type, color = national context</text></g>`;
+        return `<g opacity="${opacity}"><text class="map-stat" x="7" y="75">${state.stats.reconRestore} / 34 reconciliation or restoration</text><text class="map-stat map-stat-detail" x="7" y="79">${state.stats.closed} / 34 closed endings in this annotated sample</text><text class="map-stat map-stat-detail" x="7" y="83"><tspan x="7">Circle = Reconciliation, Square = Restoration,</tspan><tspan x="7" dy="3.6">Triangle = Transformation, and Diamond = Victory.</tspan></text></g>`;
       }
 
       function titleCase(value) {
