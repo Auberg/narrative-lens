@@ -241,29 +241,29 @@
       padding-bottom: 0;
     }
     .story-scene {
-      min-height: calc(340vh - var(--header-height) - var(--header-height));
+      min-height: calc(210vh - var(--header-height));
       display: flex;
       align-items: flex-start;
-      padding: 24vh 0 56px;
+      padding: 20vh 0 44px;
       border-bottom: 1px solid oklch(1 0 0 / 0.11);
     }
     .story-scene[data-scene="1"],
     .story-scene[data-scene="2"],
     .story-scene[data-scene="3"],
     .story-scene[data-scene="4"] {
-      min-height: calc(430vh - var(--header-height) - var(--header-height));
+      min-height: calc(260vh - var(--header-height));
     }
-    .story-scene:first-child { padding-top: 24vh; }
+    .story-scene:first-child { padding-top: 20vh; }
     .story-scene[data-scene="6"] {
-      min-height: calc(340vh - var(--header-height) - var(--header-height));
+      min-height: calc(200vh - var(--header-height));
       align-items: flex-start;
-      padding-top: 24vh;
+      padding-top: 20vh;
     }
     .closing-section {
-      min-height: calc(124vh - var(--header-height) - 34px);
+      min-height: calc(100vh - var(--header-height) - 34px);
       display: flex;
       align-items: flex-start;
-      padding: 24vh 0 0;
+      padding: 20vh 0 0;
     }
     .story-copy {
       position: sticky;
@@ -419,16 +419,16 @@
       .visual-frame { height: clamp(300px, 42vh, 420px); min-height: 300px; }
       .narrative-flow { padding-bottom: 0; }
       .story-scene {
-        min-height: 320vh;
+        min-height: 210vh;
         align-items: start;
         padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 86px;
       }
       .story-scene[data-scene="6"] {
-        min-height: 320vh;
+        min-height: 190vh;
         padding-top: calc(clamp(300px, 42vh, 420px) + 112px);
       }
       .closing-section {
-        min-height: calc(100vh + 68px);
+        min-height: calc(100vh + 8px);
         padding: calc(clamp(300px, 42vh, 420px) + 112px) 0 0;
       }
       .story-scene:first-child { padding-top: calc(clamp(300px, 42vh, 420px) + 112px); }
@@ -452,16 +452,16 @@
       .visual-frame { height: clamp(260px, 38vh, 310px); min-height: 260px; }
       .legend-line { gap: 8px 14px; }
       .story-scene {
-        min-height: 320vh;
+        min-height: 190vh;
         padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
         padding-bottom: 74px;
       }
       .story-scene[data-scene="6"] {
-        min-height: 320vh;
+        min-height: 180vh;
         padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
       }
       .closing-section {
-        min-height: calc(100vh + 72px);
+        min-height: 100vh;
         padding-top: calc(clamp(260px, 38vh, 310px) + 116px);
       }
       .story-scene:first-child { padding-top: calc(clamp(260px, 38vh, 310px) + 116px); }
@@ -931,17 +931,17 @@
       function renderLegend(scene) {
         const shapeKey = '<span class="legend-item">circle = reconciliation</span><span class="legend-item">square = restoration</span><span class="legend-item">triangle = transformation</span><span class="legend-item">diamond = victory</span>';
         if (scene === 3) {
-          legend.innerHTML = '<span class="legend-note">Position = resolution type. Color = national context. Mentioned endings stay at full strength; other points stay at 17% opacity.</span>' + shapeKey;
+          legend.innerHTML = '<span class="legend-note">Position groups the ending type, while color keeps national context visible.</span>' + shapeKey;
         } else if (scene === 5) {
           legend.innerHTML = '<span class="legend-note">Both highlighted stories are restoration, but the meaning of restoration differs.</span><span class="legend-item"><i class="legend-swatch no"></i>NO_2 Norway</span><span class="legend-item"><i class="legend-swatch us"></i>US_4 United States</span>';
         } else if (scene === 6) {
           legend.innerHTML = '<span class="legend-note">The same shapes and country colors return to each story&rsquo;s original position.</span>' + shapeKey;
         } else if (scene === 4) {
-          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Shape = resolution type. Mentioned groups stay at full strength; other points stay at 17% opacity.</span>' + shapeKey;
+          legend.innerHTML = '<span class="legend-note">Back on the map, each shape shows how the story resolves.</span>' + shapeKey;
         } else if (scene === 2) {
-          legend.innerHTML = '<span class="legend-note">Position = thematic emphasis. Color = national context. Mentioned themes or countries stay at full strength; other points stay at 17% opacity.</span><span class="legend-item"><i class="legend-swatch dot"></i>tradition / nature / community</span>';
+          legend.innerHTML = '<span class="legend-note">Stories gather by emphasis: tradition, nature, and community.</span><span class="legend-item"><i class="legend-swatch dot"></i>theme position</span>';
         } else if (scene === 1) {
-          legend.innerHTML = '<span class="legend-note">Position = national context. Color = national context. Mentioned countries stay at full strength; other points stay at 17% opacity.</span><span class="legend-item"><i class="legend-swatch dot"></i>country color becomes identity</span>';
+          legend.innerHTML = '<span class="legend-note">Stories gather by national context; color carries the same cue.</span><span class="legend-item"><i class="legend-swatch dot"></i>country color becomes identity</span>';
         } else {
           legend.innerHTML = '<span class="legend-note">Start with individual stories before interpreting origin, theme, or ending.</span><span class="legend-item"><i class="legend-swatch dot"></i>one dot = one generated story</span>';
         }
@@ -1026,8 +1026,8 @@
         if (flowRect.top > window.innerHeight || flowRect.bottom < 0) return;
         const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
         const rawDelta = event.deltaY * unit;
-        const maxDelta = Math.max(72, window.innerHeight * 0.18);
-        const cappedDelta = clamp(rawDelta * 0.32, -maxDelta, maxDelta);
+        const maxDelta = Math.max(120, window.innerHeight * 0.34);
+        const cappedDelta = clamp(rawDelta * 0.58, -maxDelta, maxDelta);
         event.preventDefault();
         window.scrollBy({ top: cappedDelta, left: 0, behavior: 'auto' });
       }
